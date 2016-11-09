@@ -1,0 +1,8 @@
+#include "src/bn/relic_bn_mem.c"
+#include "src/bn/relic_bn_add.c"
+#include "src/bn/relic_bn_cmp.c"
+#include "src/bn/relic_bn_shift.c"
+#include "src/bn/relic_bn_util.c"
+#include "src/low/relic_bn_add_low.c"
+#include "src/low/relic_bn_cmp_low.c"
+#include "src/low/relic_bn_shift_low.c"

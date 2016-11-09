@@ -1,0 +1,2 @@
+#define crypto_stream_chacha12_amd64_ssse3_KEYBYTES 32
+#define crypto_stream_chacha12_amd64_ssse3_NONCEBYTES 8
