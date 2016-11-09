@@ -1,5 +1,5 @@
 //Some definitions using AVX2 intriniscs.  This file
-//is used for all of our AVX2 implementations of Simon 
+//is used for all of our AVX2 implementations of Simon
 //and Speck with 64-bit block sizes.
 
 #include <x86intrin.h>
@@ -12,15 +12,18 @@
 #define LCS(x,r) (((x)<<r)|((x)>>(32-r)))
 #define RCS(x,r) (((x)>>r)|((x)<<(32-r)))
 
-#define XOR _mm256_xor_si256  
+#define XOR _mm256_xor_si256
 #define AND _mm256_and_si256
 #define ADD _mm256_add_epi32
 #define SL  _mm256_slli_epi32
 #define SR  _mm256_srli_epi32
 
+#define _q SET(0x7,0x6,0x3,0x2,0x5,0x4,0x1,0x0)
+#define _eight SET(0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8)
+
 #define SET _mm256_set_epi32
 #define SET1(X,c) (X=SET(c,c,c,c,c,c,c,c))
-#define SET8(X,c) (X=SET(c+7,c+6,c+3,c+2,c+5,c+4,c+1,c), c+=8)
+#define SET8(X,c) (X=SET(c,c,c,c,c,c,c,c), X=ADD(X,_q))
 
 #define LOW _mm256_unpacklo_epi32
 #define HIGH _mm256_unpackhi_epi32

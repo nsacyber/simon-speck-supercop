@@ -19,6 +19,9 @@
 #include <stdlib.h>
 #include "Simon128192NEON.h"
 
+int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes);
+int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes);
+int ExpandKey(u64 K[], u128 rk[], u64 key[]);
 
 int crypto_stream_simon128192ctr_neon(
   unsigned char *out,
@@ -30,6 +33,7 @@ int crypto_stream_simon128192ctr_neon(
   int i;
   u64 nonce[2], K[4], key[72],x,y;
   unsigned char block[16];
+  u64 * const block64 = (u64 *)block;
   u128 rk[72];
 
   if (!outlen) return 0;
@@ -45,7 +49,7 @@ int crypto_stream_simon128192ctr_neon(
     x=nonce[1]; y=nonce[0]++;
     for(i=0;i<68;i+=2) R2(x,y,key[i],key[i+1]);
     R1(x,y,key[68]);
-    ((u64 *)block)[1]=y; ((u64 *)block)[0]=x;
+    block64[1]=x; block64[0]=y;
     for(i=0;i<outlen;i++) out[i]=block[i];
 
     return 0;
@@ -89,7 +93,7 @@ int crypto_stream_simon128192ctr_neon(
 int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes)
 {
   u64  x[2],y[2];
-  u128 X[4],Y[4],Z[4];
+  u128 X[4],Y[4];
 
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]++;
@@ -140,6 +144,7 @@ int crypto_stream_simon128192ctr_neon_xor(
   int i;
   u64 nonce[2],K[4],key[72],x,y;
   unsigned char block[16];
+  u64 * const block64 = (u64 *)block;
   u128 rk[72];
 
   if (!inlen) return 0;
@@ -155,7 +160,7 @@ int crypto_stream_simon128192ctr_neon_xor(
     x=nonce[1]; y=nonce[0]++;
     for(i=0;i<68;i+=2) R2(x,y,key[i],key[i+1]);
     R1(x,y,key[68]);
-    ((u64 *)block)[1]=y; ((u64 *)block)[0]=x;
+    block64[1]=x; block64[0]=y;
     for(i=0;i<inlen;i++) out[i]=block[i]^in[i];
 
     return 0;
@@ -183,8 +188,8 @@ int crypto_stream_simon128192ctr_neon_xor(
 
   if (inlen>=16){
     Encrypt_Xor(block,in,nonce,rk,key,16);
-    ((u64 *)out)[0]=((u64 *)block)[0]^((u64 *)in)[0];
-    ((u64 *)out)[1]=((u64 *)block)[1]^((u64 *)in)[1];
+    ((u64 *)out)[0]=block64[0]^((u64 *)in)[0];
+    ((u64 *)out)[1]=block64[1]^((u64 *)in)[1];
     in+=16; inlen-=16; out+=16;
   }
 
@@ -198,10 +203,10 @@ int crypto_stream_simon128192ctr_neon_xor(
 
 
 
-int Encrypt_Xor(unsigned char *out, unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes)
+int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes)
 {
   u64  x[2],y[2];
-  u128 X[4],Y[4],Z[4];
+  u128 X[4],Y[4];
 
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
@@ -243,9 +248,9 @@ int Encrypt_Xor(unsigned char *out, unsigned char *in, u64 nonce[], u128 rk[], u
 
 int ExpandKey(u64 K[], u128 rk[], u64 key[])
 {
-  u64 A=K[0], B=K[1], C=K[2], D=K[3];
+  u64 A=K[0], B=K[1], C=K[2];
 
-  EK(A,B,C,D,rk,key);
+  EK(A,B,C,rk,key);
 
   return 0;
 }

@@ -28,7 +28,7 @@
 
 #define Rx4(X,Y,k,l)  (Sx4(X,Y,k), Sx4(Y,X,l))
 #define Rx8(X,Y,k,l)  (Sx8(X,Y,k), Sx8(Y,X,l))
-#define Rx12(X,Y,k,l) (Sx12(X,Y,k), Sx12(Y,X,l)) 
+#define Rx12(X,Y,k,l) (Sx12(X,Y,k), Sx12(Y,X,l))
 #define Rx16(X,Y,k,l) (Sx16(X,Y,k), Sx16(Y,X,l))
 
 #define f(x) ((LCS(x,1) & LCS(x,8)) ^ LCS(x,2))

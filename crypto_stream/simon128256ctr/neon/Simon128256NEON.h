@@ -29,7 +29,7 @@
 
 #define Rx2(X,Y,k,l) (Sx2(X,Y,k), Sx2(Y,X,l))
 #define Rx4(X,Y,k,l) (Sx4(X,Y,k), Sx4(Y,X,l))
-#define Rx6(X,Y,k,l) (Sx6(X,Y,k), Sx6(Y,X,l)) 
+#define Rx6(X,Y,k,l) (Sx6(X,Y,k), Sx6(Y,X,l))
 #define Rx8(X,Y,k,l) (Sx8(X,Y,k), Sx8(Y,X,l))
 
 #define f(x) ((LCS(x,1) & LCS(x,8)) ^ LCS(x,2))
@@ -49,7 +49,7 @@
 
 #define _c 0xfffffffffffffffcLL
 #define _d 0xfffffffffffffffdLL
-		      
+
 #define RK(c0,c1,c2,c3,A,B,C,D,rk,key,i) (A^=c0^(RCS(D,3)^B)^RCS(RCS(D,3)^B,1), key[i]=A, SET1(rk[i],A), \
 					  B^=c1^(RCS(A,3)^C)^RCS(RCS(A,3)^C,1), key[i+1]=B, SET1(rk[i+1],B), \
 					  C^=c2^(RCS(B,3)^D)^RCS(RCS(B,3)^D,1), key[i+2]=C, SET1(rk[i+2],C), \

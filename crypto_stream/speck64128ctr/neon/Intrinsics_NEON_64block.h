@@ -18,9 +18,9 @@
 #define SL vshlq_n_u32
 #define SR vshrq_n_u32
 
-#define SET vcombine_u64
+#define SET(a,b)  vcombine_u64(vcreate_u64(a), vcreate_u64(b))
 #define SET1(X,c) (X=vdupq_n_u32(c))
-#define SET4(X,c) ( X=SET1(X,c), X=ADD(X,(u128)SET(0x0000000200000000LL,0x0000000300000001LL)), c+=4)
+#define SET4(X,c) ( SET1(X,c), X=ADD(X,(u128)SET(0x0000000200000000LL,0x0000000300000001LL)), c+=4)
 
 #define ST16(ip,X) vst1q_u32((u32 *)(ip),X)
 #define LD16(ip) vld1q_u32((u32 *)(ip))

@@ -23,7 +23,7 @@
 
 #define Rx2(X,Y,k) (R(X[0],Y[0],k))
 #define Rx4(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k))
-#define Rx6(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k)) 
+#define Rx6(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k))
 #define Rx8(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k), R(X[3],Y[3],k))
 
 #define Rx1(x,y,k) (x[0]=RCS(x[0],8), x[0]+=y[0], x[0]^=k, y[0]=LCS(y[0],3), y[0]^=x[0])
@@ -40,7 +40,7 @@
 
 #define RK(X,Y,k,key,i) (SET1(k[i],Y), key[i]=Y, X=RCS(X,8), X+=Y, X^=i, Y=LCS(Y,3), Y^=X)
 
-#define EK(A,B,C,D,k,key) (RK(B,A,k,key,0),  RK(C,A,k,key,1),  RK(B,A,k,key,2),  RK(C,A,k,key,3),  RK(B,A,k,key,4),  RK(C,A,k,key,5),  RK(B,A,k,key,6),	\
+#define EK(A,B,C,k,key) (RK(B,A,k,key,0),  RK(C,A,k,key,1),  RK(B,A,k,key,2),  RK(C,A,k,key,3),  RK(B,A,k,key,4),  RK(C,A,k,key,5),  RK(B,A,k,key,6),	\
 			   RK(C,A,k,key,7),  RK(B,A,k,key,8),  RK(C,A,k,key,9),  RK(B,A,k,key,10), RK(C,A,k,key,11), RK(B,A,k,key,12), RK(C,A,k,key,13), \
 			   RK(B,A,k,key,14), RK(C,A,k,key,15), RK(B,A,k,key,16), RK(C,A,k,key,17), RK(B,A,k,key,18), RK(C,A,k,key,19), RK(B,A,k,key,20), \
 			   RK(C,A,k,key,21), RK(B,A,k,key,22), RK(C,A,k,key,23), RK(B,A,k,key,24), RK(C,A,k,key,25), RK(B,A,k,key,26), RK(C,A,k,key,27), \

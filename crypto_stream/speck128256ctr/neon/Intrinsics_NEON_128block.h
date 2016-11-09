@@ -18,14 +18,24 @@
 #define SL vshlq_n_u64
 #define SR vshrq_n_u64
 
-#define SET vcombine_u64
+#define SET(a,b)  vcombine_u64(vcreate_u64(a), vcreate_u64(b))
 #define SET1(X,c) (X=SET(c,c))
-#define SET2(X,c) (X=SET(c++,c++))
+#define _q        SET(0x1,0x0)
+#define SET2(X,c) (X=SET(c,c), X=ADD(X,_q))
 
 #define LOW(Z) vgetq_lane_u64(Z,0)
 #define HIGH(Z) vgetq_lane_u64(Z,1)
-#define STORE(ip,X,Y) (((u64 *)(ip))[0]=LOW(Y), ((u64 *)(ip))[1]=LOW(X), ((u64 *)(ip))[2]=HIGH(Y), ((u64 *)(ip))[3]=HIGH(X))
-#define XOR_STORE(in,out,X,Y) (Y=XOR(Y,SET(((u64 *)(in))[0],((u64 *)(in))[2])), X=XOR(X,SET(((u64 *)(in))[1],((u64 *)(in))[3])), STORE(out,X,Y))
+
+#define STORE(ip,X,Y) (       \
+    ((u64 *)(ip))[0]=LOW(Y),  \
+    ((u64 *)(ip))[1]=LOW(X),  \
+    ((u64 *)(ip))[2]=HIGH(Y), \
+    ((u64 *)(ip))[3]=HIGH(X))
+
+#define XOR_STORE(in,out,X,Y) (                      \
+    Y=XOR(Y,SET(((u64 *)(in))[0],((u64 *)(in))[2])), \
+    X=XOR(X,SET(((u64 *)(in))[1],((u64 *)(in))[3])), \
+    STORE(out,X,Y))
 
 //On some ARM processors the following rotation may perform better.
 //#define ROR(X,r) (XOR(SR(X,r),SL(X,(64-(r)))))

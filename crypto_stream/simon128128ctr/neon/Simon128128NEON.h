@@ -47,11 +47,11 @@
 
 #define _c 0xfffffffffffffffcLL
 #define _d 0xfffffffffffffffdLL
-		      
+
 #define RK(c0,c1,A,B,rk,key,i) (A^=c0^(RCS(B,3)^RCS(B,4)), key[i]=A, SET1(rk[i],A), \
 				B^=c1^(RCS(A,3)^RCS(A,4)), key[i+1]=B, SET1(rk[i+1],B))
 
-#define EK(A,B,C,D,rk,key) (SET1(rk[0],A), key[0]=A, SET1(rk[1],B), key[1]=B,\
+#define EK(A,B,rk,key) (SET1(rk[0],A), key[0]=A, SET1(rk[1],B), key[1]=B,\
 			    RK(_d,_c,A,B,rk,key,2),  RK(_d,_c,A,B,rk,key,4),  RK(_d,_d,A,B,rk,key,6),  RK(_d,_d,A,B,rk,key,8), \
 			    RK(_c,_d,A,B,rk,key,10), RK(_d,_d,A,B,rk,key,12), RK(_c,_c,A,B,rk,key,14), RK(_c,_c,A,B,rk,key,16), \
 			    RK(_c,_c,A,B,rk,key,18), RK(_d,_d,A,B,rk,key,20), RK(_c,_d,A,B,rk,key,22), RK(_c,_c,A,B,rk,key,24), \

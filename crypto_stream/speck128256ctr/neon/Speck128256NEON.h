@@ -23,7 +23,7 @@
 
 #define Rx2(X,Y,k) (R(X[0],Y[0],k))
 #define Rx4(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k))
-#define Rx6(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k)) 
+#define Rx6(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k))
 #define Rx8(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k), R(X[3],Y[3],k))
 
 #define Rx1(x,y,k) (x[0]=RCS(x[0],8), x[0]+=y[0], x[0]^=k, y[0]=LCS(y[0],3), y[0]^=x[0])

@@ -20,17 +20,27 @@
 #include "Speck6496SSE4.h"
 
 
+int crypto_stream_speck6496ctr_sse4(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
+static int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes);
+int crypto_stream_speck6496ctr_sse4_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
+static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes);
+static int ExpandKey(u32 K[], u128 rk[], u32 key[]);
+static inline void Enc16(u128 X[], u128 Y[], u128 rk[]);
+
+
 int crypto_stream_speck6496ctr_sse4(
-  unsigned char *out, 
-  unsigned long long outlen, 
-  const unsigned char *n, 
+  unsigned char *out,
+  unsigned long long outlen,
+  const unsigned char *n,
   const unsigned char *k
 )
 {
   int i;
-  u32 nonce[2],K[4],key[27],A,B,C,D,x,y;
+  u32 nonce[2],K[4],key[27],A,B,C,x,y;
   unsigned char block[8];
+  u32 * const block32 = (u32 *)block;
   u128 rk[27];
+
 
   if (!outlen) return 0;
 
@@ -43,15 +53,15 @@ int crypto_stream_speck6496ctr_sse4(
     C=K[2]; B=K[1]; A=K[0];
     x=nonce[1]; y=nonce[0]++;
     for(i=0;i<26;i+=2){
-      Rx1b(x,y,A); Rx1b(B,A,i); 
+      Rx1b(x,y,A); Rx1b(B,A,i);
       Rx1b(x,y,A); Rx1b(C,A,i+1);
     }
-    ((u32*)block)[1]=x; ((u32*)block)[0]=y;
+    block32[1]=x; block32[0]=y;
     for(i=0;i<outlen;i++) out[i]=block[i];
 
     return 0;
   }
-  
+
   ExpandKey(K,rk,key);
 
   while(outlen>=128){
@@ -84,7 +94,7 @@ int crypto_stream_speck6496ctr_sse4(
     out+=8; outlen-=8;
   }
 
-  if (outlen>0){ 
+  if (outlen>0){
     Encrypt(block,nonce,rk,key,8);
     for (i=0;i<outlen;i++) out[i] = block[i];
   }
@@ -94,7 +104,7 @@ int crypto_stream_speck6496ctr_sse4(
 
 
 
-int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes)
+static int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes)
 {
   u32  x[2],y[2];
   u128 X[4],Y[4],Z[4];
@@ -117,26 +127,24 @@ int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes)
 
     return 0;
   }
-  
-  SET1(X[0],nonce[1]);
-  SET4(Y[0],nonce[0]);
 
-  if (numbytes==32) Enc(X,Y,rk,4); 
+  SET1(X[0],nonce[1]); SET4(Y[0],nonce[0]);
+
+  if (numbytes==32) Enc(X,Y,rk,4);
   else{
-    X[1]=X[0];
-    SET4(Y[1],nonce[0]);
-    if (numbytes==64) Enc(X,Y,rk,8); 
+    X[1]=X[0]; Y[1]=ADD(Y[0],_four);
+    if (numbytes==64) Enc(X,Y,rk,8);
     else{
-      X[2]=X[0];
-      SET4(Y[2],nonce[0]);
-      if (numbytes==96) Enc(X,Y,rk,12); 
+      X[2]=X[0]; Y[2]=ADD(Y[1],_four);
+      if (numbytes==96) Enc(X,Y,rk,12);
       else{
-	X[3]=X[0];
-	SET4(Y[3],nonce[0]);
+	X[3]=X[0]; Y[3]=ADD(Y[2],_four);
 	Enc(X,Y,rk,16);
       }
     }
   }
+
+  nonce[0]+=(numbytes>>3);
 
   STORE(out,X[0],Y[0]);
   if (numbytes>=64)  STORE(out+32,X[1],Y[1]);
@@ -149,17 +157,20 @@ int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes)
 
 
 int crypto_stream_speck6496ctr_sse4_xor(
-  unsigned char *out, 
-  const unsigned char *in, 
-  unsigned long long inlen, 
-  const unsigned char *n, 
+  unsigned char *out,
+  const unsigned char *in,
+  unsigned long long inlen,
+  const unsigned char *n,
   const unsigned char *k
 )
 {
   int i;
-  u32 nonce[2],K[4],key[27],A,B,C,D,x,y;
+  u32 nonce[2],K[4],key[27],A,B,C,x,y;
   unsigned char block[8];
+  u32 * const block32 = (u32 *)block;
+  u64 * const block64 = (u64 *)block;
   u128 rk[27];
+
 
   if (!inlen) return 0;
 
@@ -172,15 +183,15 @@ int crypto_stream_speck6496ctr_sse4_xor(
     C=K[2]; B=K[1]; A=K[0];
     x=nonce[1]; y=nonce[0]++;
     for(i=0;i<26;i+=2){
-      Rx1b(x,y,A); Rx1b(B,A,i); 
+      Rx1b(x,y,A); Rx1b(B,A,i);
       Rx1b(x,y,A); Rx1b(C,A,i+1);
     }
-    ((u32*)block)[1]=x; ((u32*)block)[0]=y;
+    block32[1]=x; block32[0]=y;
     for(i=0;i<inlen;i++) out[i]=block[i]^in[i];
 
     return 0;
   }
-  
+
   ExpandKey(K,rk,key);
 
   while(inlen>=128){
@@ -210,11 +221,11 @@ int crypto_stream_speck6496ctr_sse4_xor(
 
   if (inlen>=8){
     Encrypt_Xor(block,in,nonce,rk,key,8);
-    ((u64 *)out)[0]=((u64 *)block)[0]^((u64 *)in)[0];
+    ((u64 *)out)[0]=block64[0]^((u64 *)in)[0];
     in+=8; inlen-=8; out+=8;
   }
 
-  if (inlen>0){ 
+  if (inlen>0){
     Encrypt_Xor(block,in,nonce,rk,key,8);
     for (i=0;i<inlen;i++) out[i]=block[i]^in[i];
   }
@@ -224,7 +235,7 @@ int crypto_stream_speck6496ctr_sse4_xor(
 
 
 
-int Encrypt_Xor(unsigned char *out, unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes)
+static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes)
 {
   u32  x[2],y[2];
   u128 X[4],Y[4],Z[4];
@@ -248,25 +259,23 @@ int Encrypt_Xor(unsigned char *out, unsigned char *in, u32 nonce[], u128 rk[], u
     return 0;
   }
 
-  SET1(X[0],nonce[1]);
-  SET4(Y[0],nonce[0]);
+  SET1(X[0],nonce[1]); SET4(Y[0],nonce[0]);
 
   if (numbytes==32) Enc(X,Y,rk,4);
   else{
-    X[1]=X[0];
-    SET4(Y[1],nonce[0]);
-    if (numbytes==64) Enc(X,Y,rk,8); 
+    X[1]=X[0]; Y[1]=ADD(Y[0],_four);
+    if (numbytes==64) Enc(X,Y,rk,8);
     else{
-      X[2]=X[0];
-      SET4(Y[2],nonce[0]);
-      if (numbytes==96) Enc(X,Y,rk,12); 
+      X[2]=X[0]; Y[2]=ADD(Y[1],_four);
+      if (numbytes==96) Enc(X,Y,rk,12);
       else{
-	X[3]=X[0];
-	SET4(Y[3],nonce[0]);
-	Enc(X,Y,rk,16);
+	X[3]=X[0]; Y[3]=ADD(Y[2],_four);
+	Enc16(X,Y,rk);
       }
     }
   }
+
+  nonce[0]+=(numbytes>>3);
 
   XOR_STORE(in,out,X[0],Y[0]);
   if (numbytes>=64)  XOR_STORE(in+32,out+32,X[1],Y[1]);
@@ -278,11 +287,20 @@ int Encrypt_Xor(unsigned char *out, unsigned char *in, u32 nonce[], u128 rk[], u
 
 
 
-int ExpandKey(u32 K[], u128 rk[], u32 key[])
+static int ExpandKey(u32 K[], u128 rk[], u32 key[])
 {
-  u32 A=K[0], B=K[1], C=K[2], D=K[3]; 
+  u32 A=K[0], B=K[1], C=K[2];
 
-  EK(A,B,C,D,rk,key);
+  EK(A,B,C,rk,key);
 
   return 0;
+}
+
+
+
+static inline void Enc16(u128 X[], u128 Y[], u128 rk[])
+{
+  u128 Z[4];
+
+  Enc(X,Y,rk,16);
 }

@@ -20,7 +20,7 @@
 #define numrounds   27
 #define numkeywords 4
 
-#define R(X,Y,k) (X=XOR(ADD(ROR8(X),Y),k), Y=XOR(ROL(Y,3),X)) 
+#define R(X,Y,k) (X=XOR(ADD(ROR8(X),Y),k), Y=XOR(ROL(Y,3),X))
 
 #define Rx8(X,Y,k)  (R(X[0],Y[0],k))
 #define Rx16(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k))

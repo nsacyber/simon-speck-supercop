@@ -33,7 +33,7 @@
 
 #define Rx4(X,Y,k)  (R(X[0],Y[0],k))
 #define Rx8(X,Y,k)  (R(X[0],Y[0],k), R(X[1],Y[1],k))
-#define Rx12(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k)) 
+#define Rx12(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k))
 #define Rx16(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k), R(X[3],Y[3],k))
 
 

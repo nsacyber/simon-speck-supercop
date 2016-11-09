@@ -29,7 +29,7 @@
 
 #define Rx2(X,Y,k,l) (Sx2(X,Y,k), Sx2(Y,X,l))
 #define Rx4(X,Y,k,l) (Sx4(X,Y,k), Sx4(Y,X,l))
-#define Rx6(X,Y,k,l) (Sx6(X,Y,k), Sx6(Y,X,l)) 
+#define Rx6(X,Y,k,l) (Sx6(X,Y,k), Sx6(Y,X,l))
 #define Rx8(X,Y,k,l) (Sx8(X,Y,k), Sx8(Y,X,l))
 
 #define f(x) ((LCS(x,1) & LCS(x,8)) ^ LCS(x,2))
@@ -49,12 +49,12 @@
 
 #define _c 0xfffffffffffffffcLL
 #define _d 0xfffffffffffffffdLL
-		      
+
 #define RK(c0,c1,c2,A,B,C,rk,key,i) (A^=c0^(RCS(C,3)^RCS(C,4)), key[i]=A, SET1(rk[i],A), \
 				     B^=c1^(RCS(A,3)^RCS(A,4)), key[i+1]=B, SET1(rk[i+1],B), \
 				     C^=c2^(RCS(B,3)^RCS(B,4)), key[i+2]=C, SET1(rk[i+2],C))
 
-#define EK(A,B,C,D,rk,key) (SET1(rk[0],A), key[0]=A, SET1(rk[1],B), key[1]=B, SET1(rk[2],C), key[2]=C, \
+#define EK(A,B,C,rk,key) (SET1(rk[0],A), key[0]=A, SET1(rk[1],B), key[1]=B, SET1(rk[2],C), key[2]=C, \
 			    RK(_d,_d,_c,A,B,C,rk,key,3),  RK(_d,_d,_c,A,B,C,rk,key,6),  RK(_d,_d,_d,A,B,C,rk,key,9),  RK(_c,_d,_c,A,B,C,rk,key,12), \
 			    RK(_d,_d,_c,A,B,C,rk,key,15), RK(_c,_c,_d,A,B,C,rk,key,18), RK(_d,_c,_c,A,B,C,rk,key,21), RK(_d,_c,_d,A,B,C,rk,key,24), \
 			    RK(_d,_d,_d,A,B,C,rk,key,27), RK(_c,_c,_c,A,B,C,rk,key,30), RK(_c,_c,_c,A,B,C,rk,key,33), RK(_d,_c,_c,A,B,C,rk,key,36), \
