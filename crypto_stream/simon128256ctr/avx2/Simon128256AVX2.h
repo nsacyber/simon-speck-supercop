@@ -48,7 +48,7 @@
 		       R2x##n(X,Y,rk,30,31), R2x##n(X,Y,rk,32,33), R2x##n(X,Y,rk,34,35), R2x##n(X,Y,rk,36,37), R2x##n(X,Y,rk,38,39), \
 		       R2x##n(X,Y,rk,40,41), R2x##n(X,Y,rk,42,43), R2x##n(X,Y,rk,44,45), R2x##n(X,Y,rk,46,47), R2x##n(X,Y,rk,48,49), \
 		       R2x##n(X,Y,rk,50,51), R2x##n(X,Y,rk,52,53), R2x##n(X,Y,rk,54,55), R2x##n(X,Y,rk,56,57), R2x##n(X,Y,rk,58,59), \
-		       R2x##n(X,Y,rk,60,61), R2x##n(X,Y,rk,62,63), R2x##n(X,Y,rk,64,65), R2x##n(X,Y,rk,66,67), R2x##n(X,Y,rk,68,69),\
+		       R2x##n(X,Y,rk,60,61), R2x##n(X,Y,rk,62,63), R2x##n(X,Y,rk,64,65), R2x##n(X,Y,rk,66,67), R2x##n(X,Y,rk,68,69), \
 		       R2x##n(X,Y,rk,70,71))
 
 
@@ -76,7 +76,6 @@
 		  RKBS(rk,52,_D), RKBS(rk,53,_C), RKBS(rk,54,_C), RKBS(rk,55,_D), RKBS(rk,56,_C),  RKBS(rk,57,_C), RKBS(rk,58,_D), RKBS(rk,59,_D), \
 		  RKBS(rk,60,_D), RKBS(rk,61,_C), RKBS(rk,62,_D), RKBS(rk,63,_D), RKBS(rk,64,_D),  RKBS(rk,65,_D), RKBS(rk,66,_D), RKBS(rk,67,_D), \
 		  RKBS(rk,68,_C), RKBS(rk,69,_D), RKBS(rk,70,_C), RKBS(rk,71,_C))
-
 
 
 

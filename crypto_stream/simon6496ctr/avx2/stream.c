@@ -49,7 +49,7 @@ int crypto_stream_simon6496ctr_avx2(
 
   for(i=0;i<numkeywords;i++) K[i]=((u32 *)k)[i];
 
-  if (outlen>=1024){
+  if (outlen>=512){
     ExpandKeyBS(K,rk);
 
     while(outlen>=512){
@@ -216,7 +216,7 @@ int crypto_stream_simon6496ctr_avx2_xor(
 
   for(i=0;i<numkeywords;i++) K[i]=((u32 *)k)[i];
 
-  if (inlen>=1024){
+  if (inlen>=512){
     ExpandKeyBS(K,rk);
 
     while(inlen>=512){

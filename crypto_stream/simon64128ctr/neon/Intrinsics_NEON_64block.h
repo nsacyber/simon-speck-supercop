@@ -18,9 +18,9 @@
 #define SL vshlq_n_u32
 #define SR vshrq_n_u32
 
-#define SET(a,b)  vcombine_u64(vcreate_u64(a), vcreate_u64(b))
+#define SET(a,b) vcombine_u32((uint32x2_t)(a),(uint32x2_t)(b))
 #define SET1(X,c) (X=vdupq_n_u32(c))
-#define SET4(X,c) ( SET1(X,c), X=ADD(X,(u128)SET(0x0000000200000000LL,0x0000000300000001LL)), c+=4)
+#define SET4(X,c) (SET1(X,c), X=ADD(X,SET(0x0000000200000000LL,0x0000000300000001LL)),c+=4)
 
 #define ST16(ip,X) vst1q_u32((u32 *)(ip),X)
 #define LD16(ip) vld1q_u32((u32 *)(ip))
@@ -33,5 +33,7 @@
 
 #define ROL(X,r) vsriq_n_u32(SL(X,r),X,(32-r))
 #define ROR(X,r) vsriq_n_u32(SL(X,(32-r)),X,r)
-#define ROL8(X)  vsriq_n_u32(SL(X,8),X,24)
-#define ROR8(X)  vsriq_n_u32(SL(X,24),X,8)
+#define ROL4(X) ROL(X,4)
+#define ROR4(X) ROR(X,4)
+#define ROL8(X)  ROL(X,8)
+#define ROR8(X) ROR(X,8)

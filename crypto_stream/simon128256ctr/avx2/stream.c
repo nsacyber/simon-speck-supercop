@@ -21,12 +21,12 @@
 
 
 int crypto_stream_simon128256ctr_avx2(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt(unsigned char *out, u64 nonce[], u256 rk[][8], u64 key[], int numbytes);
+int Encrypt(unsigned char *out, u64 nonce[], u256 rk[][8], u64 key[], int numbytes);
 int crypto_stream_simon128256ctr_avx2_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u256 rk[][8], u64 key[], int numbytes);
-static int ExpandKeyBS(u64 K[],u256 rk[][8]);
-static int ExpandKeyNBS(u64 K[], u256 rk[][8], u64 key[]);
-static inline int Transpose(u256 T[8]);
+int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u256 rk[][8], u64 key[], int numbytes);
+int ExpandKeyBS(u64 K[],u256 rk[][8]);
+int ExpandKeyNBS(u64 K[], u256 rk[][8], u64 key[]);
+inline int Transpose(u256 T[8]);
 
 
 
@@ -102,7 +102,7 @@ int crypto_stream_simon128256ctr_avx2(
 
 
 
-static int Encrypt(unsigned char *out, u64 nonce[], u256 rk[][8], u64 key[], int numbytes)
+int Encrypt(unsigned char *out, u64 nonce[], u256 rk[][8], u64 key[], int numbytes)
 {
   u64  i,j,x[4],y[4];
   u256 X[8],Y[8];
@@ -251,7 +251,7 @@ int crypto_stream_simon128256ctr_avx2_xor(
 
 
 
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u256 rk[][8], u64 key[], int numbytes)
+int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u256 rk[][8], u64 key[], int numbytes)
 {
   u64  i,j,x[4],y[4];
   u256 X[8],Y[8];
@@ -324,7 +324,7 @@ static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[],
 
 
 
-static int ExpandKeyBS(u64 K[],u256 rk[][8])
+int ExpandKeyBS(u64 K[],u256 rk[][8])
 {
   int i,j;
 
@@ -344,7 +344,7 @@ static int ExpandKeyBS(u64 K[],u256 rk[][8])
 
 
 
-static int ExpandKeyNBS(u64 K[], u256 rk[][8], u64 key[])
+int ExpandKeyNBS(u64 K[], u256 rk[][8], u64 key[])
 {
   u64 A=K[0], B=K[1], C=K[2], D=K[3];
 
@@ -355,7 +355,7 @@ static int ExpandKeyNBS(u64 K[], u256 rk[][8], u64 key[])
 
 
 
-static inline int Transpose(u256 T[8])
+inline int Transpose(u256 T[8])
 {
   u256 W[4];
   const u256 mask4 = SET(0x0f0f0f0f0f0f0f0fLL, 0x0f0f0f0f0f0f0f0fLL, 0x0f0f0f0f0f0f0f0fLL, 0x0f0f0f0f0f0f0f0fLL);

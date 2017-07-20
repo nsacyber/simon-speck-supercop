@@ -21,12 +21,12 @@
 
 
 int crypto_stream_simon128192ctr_sse4(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt(unsigned char *out,u64 nonce[],u128 rk[][8],u64 key[],int numbytes);
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out,u64 nonce[],u128 rk[][8],u64 key[],int numbytes);
 int crypto_stream_simon128192ctr_sse4_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[][8], u64 key[], int numbytes);
-static int ExpandKeyBS(u64 K[],u128 rk[][8]);
-static int ExpandKeyNBS(u64 K[], u128 rk[][8], u64 key[]);
-static inline int Transpose(u128 M[]);
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[][8], u64 key[], int numbytes);
+int ExpandKeyBS(u64 K[],u128 rk[][8]);
+int ExpandKeyNBS(u64 K[], u128 rk[][8], u64 key[]);
+inline __attribute__((always_inline)) int Transpose(u128 M[]);
 
 
 
@@ -49,7 +49,7 @@ int crypto_stream_simon128192ctr_sse4(
 
   for(i=0;i<numkeywords;i++) K[i]=((u64 *)k)[i];
 
-  if (outlen>=768){
+  if (outlen>=256){
     ExpandKeyBS(K,rk);
 
     while(outlen>=256){
@@ -97,7 +97,7 @@ int crypto_stream_simon128192ctr_sse4(
 
 
 
-static int Encrypt(unsigned char *out, u64 nonce[], u128 rk[][8], u64 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u64 nonce[], u128 rk[][8], u64 key[], int numbytes)
 {
   u64  i,j,x[4],y[4];
   u128 X[8],Y[8];
@@ -183,7 +183,7 @@ int crypto_stream_simon128192ctr_sse4_xor(
 
   for(i=0;i<numkeywords;i++) K[i]=((u64 *)k)[i];
 
-  if (inlen>=768){
+  if (inlen>=256){
     ExpandKeyBS(K,rk);
 
     while(inlen>=256){
@@ -233,7 +233,7 @@ int crypto_stream_simon128192ctr_sse4_xor(
 
 
 
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[][8], u64 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[][8], u64 key[], int numbytes)
 {
   u64  i,j,x[4],y[4];
   u128 X[8],Y[8];
@@ -298,7 +298,7 @@ static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[],
 }
 
 
-static int ExpandKeyBS(u64 K[],u128 rk[][8])
+int ExpandKeyBS(u64 K[],u128 rk[][8])
 {
   int i,j;
 
@@ -317,7 +317,7 @@ static int ExpandKeyBS(u64 K[],u128 rk[][8])
 
 
 
-static int ExpandKeyNBS(u64 K[], u128 rk[][8], u64 key[])
+int ExpandKeyNBS(u64 K[], u128 rk[][8], u64 key[])
 {
   u64 A=K[0], B=K[1], C=K[2];
 
@@ -328,45 +328,67 @@ static int ExpandKeyNBS(u64 K[], u128 rk[][8], u64 key[])
 
 
 
-static inline int Transpose(u128 T[8])
+inline __attribute__((always_inline)) int Transpose(u128 T[8])
 {
-  int i;
   u128 W[4];
   const u128 mask4 = SET(0x0f0f0f0f0f0f0f0fLL, 0x0f0f0f0f0f0f0f0fLL);
   const u128 mask2 = SET(0x3333333333333333LL, 0x3333333333333333LL);
   const u128 mask1 = SET(0x5555555555555555LL, 0x5555555555555555LL);
 
 
-  for(i=0; i<4; i++)
-    {
-      W[i] = AND(XOR(SR(T[i],4),T[i+4]), mask4);
-      T[i+4] = XOR(T[i+4],W[i]);
-      W[i] = SL(W[i],4);
-      T[i] = XOR(T[i],W[i]);
-    }
+  W[0] = AND(XOR(SR(T[0],4),T[4]), mask4);
+  T[4] = XOR(T[4], W[0]);
+  W[0] = SL(W[0],4);
+  T[0] = XOR(T[0], W[0]);
+
+  W[1] = AND(XOR(SR(T[1],4),T[5]), mask4);
+  T[5] = XOR(T[5], W[1]);
+  W[1] = SL(W[1],4);
+  T[1] = XOR(T[1], W[1]);
+
+  W[2] = AND(XOR(SR(T[2],4),T[6]), mask4);
+  T[6] = XOR(T[6], W[2]);
+  W[2] = SL(W[2],4);
+  T[2] = XOR(T[2], W[2]);
+
+  W[3] = AND(XOR(SR(T[3],4),T[7]), mask4);
+  T[7] = XOR(T[7], W[3]);
+  W[3] = SL(W[3],4);
+  T[3] = XOR(T[3], W[3]);
 
   W[0] = AND( XOR(SR(T[0],2),T[2]), mask2);
   T[2] = XOR(T[2], W[0]);
   T[0] = XOR(T[0], SL(W[0],2));
 
-  W[1] = AND(XOR(SR(T[1],2),T[3]), mask2);
+  W[1] = AND( XOR(SR(T[1],2),T[3]), mask2);
   T[3] = XOR(T[3], W[1]);
   T[1] = XOR(T[1], SL(W[1],2));
 
-  W[2] = AND(XOR(SR(T[4],2),T[6]), mask2);
+  W[2] = AND( XOR(SR(T[4],2),T[6]), mask2);
   T[6] = XOR(T[6], W[2]);
   T[4] = XOR(T[4], SL(W[2],2));
 
-  W[3] = AND(XOR(SR(T[5],2),T[7]), mask2);
+  W[3] = AND( XOR(SR(T[5],2),T[7]), mask2);
   T[7] = XOR(T[7], W[3]);
   T[5] = XOR(T[5], SL(W[3],2));
 
-  for(i=0; i<4; i++)
-    {
-      W[i] = AND(XOR(SR(T[2*i],1),T[2*i+1]), mask1);
-      T[2*i+1] = XOR(T[2*i+1],W[i]);
-      T[2*i] = XOR(T[2*i],SL(W[i],1));
-    }
+ 
+  W[0] = AND( XOR(SR(T[0],1),T[1]), mask1);
+  T[1] = XOR(T[1], W[0]);
+  T[0] = XOR(T[0], SL(W[0],1));
 
-    return 0;
+  W[1] = AND( XOR(SR(T[2],1),T[3]), mask1);
+  T[3] = XOR(T[3], W[1]);
+  T[2] = XOR(T[2], SL(W[1],1));
+
+  W[2] = AND( XOR(SR(T[4],1),T[5]), mask1);
+  T[5] = XOR(T[5], W[2]);
+  T[4] = XOR(T[4], SL(W[2],1));
+  
+  W[3] = AND( XOR(SR(T[6],1),T[7]), mask1);
+  T[7] = XOR(T[7], W[3]);
+  T[6] = XOR(T[6], SL(W[3],1));
+  
+  return 0;
 }
+

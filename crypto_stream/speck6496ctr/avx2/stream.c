@@ -21,10 +21,10 @@
 
 
 int crypto_stream_speck6496ctr_avx2(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt(unsigned char *out, u32 nonce[], u256 rk[], u32 key[], int numbytes);
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[], u256 rk[], u32 key[], int numbytes);
 int crypto_stream_speck6496ctr_avx2_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u256 rk[], u32 key[], int numbytes);
-static int ExpandKey(u32 K[], u256 rk[], u32 key[]);
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u256 rk[], u32 key[], int numbytes);
+int ExpandKey(u32 K[], u256 rk[], u32 key[]);
 
 
 
@@ -107,10 +107,10 @@ int crypto_stream_speck6496ctr_avx2(
 
 
 
-static int Encrypt(unsigned char *out, u32 nonce[], u256 rk[], u32 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[], u256 rk[], u32 key[], int numbytes)
 {
   u32  x[4],y[4];
-  u256 X[4],Y[4];
+  u256 X[4],Y[4],Z[4];
 
   if (numbytes==8){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
@@ -255,10 +255,10 @@ int crypto_stream_speck6496ctr_avx2_xor(
 
 
 
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u256 rk[], u32 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u256 rk[], u32 key[], int numbytes)
 {
   u32  x[4],y[4];
-  u256 X[4],Y[4];
+  u256 X[4],Y[4],Z[4];
 
 
   if (numbytes==8){
@@ -321,7 +321,7 @@ static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[],
 
 
 
-static int ExpandKey(u32 K[], u256 rk[], u32 key[])
+int ExpandKey(u32 K[], u256 rk[], u32 key[])
 {
   u32 A=K[0], B=K[1], C=K[2];
 

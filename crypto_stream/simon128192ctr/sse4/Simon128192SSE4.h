@@ -83,9 +83,9 @@
 					C^=c2^(RCS(B,3)^RCS(B,4)), key[i+2]=C, SET1(rk[i+2][0],C))
 
 #define EKNBS(A,B,C,rk,key) (SET1(rk[0][0],A), key[0]=A, SET1(rk[1][0],B), key[1]=B, SET1(rk[2][0],C), key[2]=C, \
-			       RKNBS(_d,_d,_c,A,B,C,rk,key,3),  RKNBS(_d,_d,_c,A,B,C,rk,key,6),  RKNBS(_d,_d,_d,A,B,C,rk,key,9),  RKNBS(_c,_d,_c,A,B,C,rk,key,12), \
-			       RKNBS(_d,_d,_c,A,B,C,rk,key,15), RKNBS(_c,_c,_d,A,B,C,rk,key,18), RKNBS(_d,_c,_c,A,B,C,rk,key,21), RKNBS(_d,_c,_d,A,B,C,rk,key,24), \
-			       RKNBS(_d,_d,_d,A,B,C,rk,key,27), RKNBS(_c,_c,_c,A,B,C,rk,key,30), RKNBS(_c,_c,_c,A,B,C,rk,key,33), RKNBS(_d,_c,_c,A,B,C,rk,key,36), \
-			       RKNBS(_d,_c,_c,A,B,C,rk,key,39), RKNBS(_c,_d,_c,A,B,C,rk,key,42), RKNBS(_d,_c,_c,A,B,C,rk,key,45), RKNBS(_d,_d,_d,A,B,C,rk,key,48), \
-			       RKNBS(_c,_c,_d,A,B,C,rk,key,51), RKNBS(_d,_c,_d,A,B,C,rk,key,54), RKNBS(_c,_c,_c,A,B,C,rk,key,57), RKNBS(_c,_d,_d,A,B,C,rk,key,60), \
-			       RKNBS(_d,_d,_d,A,B,C,rk,key,63), RKNBS(_d,_c,_d,A,B,C,rk,key,66))
+			     RKNBS(_d,_d,_c,A,B,C,rk,key,3),  RKNBS(_d,_d,_c,A,B,C,rk,key,6),  RKNBS(_d,_d,_d,A,B,C,rk,key,9),  RKNBS(_c,_d,_c,A,B,C,rk,key,12), \
+			     RKNBS(_d,_d,_c,A,B,C,rk,key,15), RKNBS(_c,_c,_d,A,B,C,rk,key,18), RKNBS(_d,_c,_c,A,B,C,rk,key,21), RKNBS(_d,_c,_d,A,B,C,rk,key,24), \
+			     RKNBS(_d,_d,_d,A,B,C,rk,key,27), RKNBS(_c,_c,_c,A,B,C,rk,key,30), RKNBS(_c,_c,_c,A,B,C,rk,key,33), RKNBS(_d,_c,_c,A,B,C,rk,key,36), \
+			     RKNBS(_d,_c,_c,A,B,C,rk,key,39), RKNBS(_c,_d,_c,A,B,C,rk,key,42), RKNBS(_d,_c,_c,A,B,C,rk,key,45), RKNBS(_d,_d,_d,A,B,C,rk,key,48), \
+			     RKNBS(_c,_c,_d,A,B,C,rk,key,51), RKNBS(_d,_c,_d,A,B,C,rk,key,54), RKNBS(_c,_c,_c,A,B,C,rk,key,57), RKNBS(_c,_d,_d,A,B,C,rk,key,60), \
+			     RKNBS(_d,_d,_d,A,B,C,rk,key,63), RKNBS(_d,_c,_d,A,B,C,rk,key,66))

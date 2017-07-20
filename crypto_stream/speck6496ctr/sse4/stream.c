@@ -21,11 +21,11 @@
 
 
 int crypto_stream_speck6496ctr_sse4(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes);
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes);
 int crypto_stream_speck6496ctr_sse4_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes);
-static int ExpandKey(u32 K[], u128 rk[], u32 key[]);
-static inline void Enc16(u128 X[], u128 Y[], u128 rk[]);
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes);
+int ExpandKey(u32 K[], u128 rk[], u32 key[]);
+
 
 
 int crypto_stream_speck6496ctr_sse4(
@@ -104,7 +104,7 @@ int crypto_stream_speck6496ctr_sse4(
 
 
 
-static int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u32 nonce[], u128 rk[], u32 key[], int numbytes)
 {
   u32  x[2],y[2];
   u128 X[4],Y[4],Z[4];
@@ -235,7 +235,7 @@ int crypto_stream_speck6496ctr_sse4_xor(
 
 
 
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[], u32 key[], int numbytes)
 {
   u32  x[2],y[2];
   u128 X[4],Y[4],Z[4];
@@ -270,7 +270,7 @@ static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[],
       if (numbytes==96) Enc(X,Y,rk,12);
       else{
 	X[3]=X[0]; Y[3]=ADD(Y[2],_four);
-	Enc16(X,Y,rk);
+	Enc(X,Y,rk,16);
       }
     }
   }
@@ -287,20 +287,11 @@ static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[],
 
 
 
-static int ExpandKey(u32 K[], u128 rk[], u32 key[])
+int ExpandKey(u32 K[], u128 rk[], u32 key[])
 {
   u32 A=K[0], B=K[1], C=K[2];
 
   EK(A,B,C,rk,key);
 
   return 0;
-}
-
-
-
-static inline void Enc16(u128 X[], u128 Y[], u128 rk[])
-{
-  u128 Z[4];
-
-  Enc(X,Y,rk,16);
 }

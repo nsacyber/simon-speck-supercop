@@ -2,7 +2,7 @@
 //is used for all of our SSE4 implementations of Simon 
 //and Speck with 128-bit block sizes.
 
-#include <x86intrin.h>
+#include <smmintrin.h>
 
 
 #define u32 unsigned

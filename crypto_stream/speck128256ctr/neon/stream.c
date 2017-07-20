@@ -19,9 +19,13 @@
 #include <stdlib.h>
 #include "Speck128256NEON.h"
 
-int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes);
-int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes);
-int ExpandKey(u64 K[], u128 rk[], u64 key[]);
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes);
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes);
+inline __attribute__((always_inline)) int ExpandKey(u64 K[], u128 rk[], u64 key[]);
+int crypto_stream_speck128256ctr_neon(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
+int crypto_stream_speck128256ctr_neon_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
+
+
 
 int crypto_stream_speck128256ctr_neon(
   unsigned char *out,
@@ -33,7 +37,7 @@ int crypto_stream_speck128256ctr_neon(
   int i;
   u64 nonce[2], K[4], key[34],A,B,C,D,x,y;
   unsigned char block[16];
-  u64 * const block64 = (u64 *)block;
+  u64 *const block64=(u64 *)block;
   u128 rk[34];
 
   if (!outlen) return 0;
@@ -95,10 +99,10 @@ int crypto_stream_speck128256ctr_neon(
 
 
 
-int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes)
 {
   u64  x[2],y[2];
-  u128 X[4],Y[4];
+  u128 X[4],Y[4],Z[4];
 
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
@@ -108,21 +112,17 @@ int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes)
     return 0;
   }
 
-  SET1(X[0],nonce[1]);
-  SET2(Y[0],nonce[0]);
+  SET1(X[0],nonce[1]); SET2(Y[0],nonce[0]);
 
   if (numbytes==32) Enc(X,Y,rk,2);
   else{
-    X[1]=X[0];
-    SET2(Y[1],nonce[0]);
+    X[1]=X[0]; SET2(Y[1],nonce[0]);
     if (numbytes==64) Enc(X,Y,rk,4);
     else{
-      X[2]=X[0];
-      SET2(Y[2],nonce[0]);
+      X[2]=X[0]; SET2(Y[2],nonce[0]);
       if (numbytes==96) Enc(X,Y,rk,6);
       else{
-        X[3]=X[0];
-	SET2(Y[3],nonce[0]);
+        X[3]=X[0]; SET2(Y[3],nonce[0]);
         Enc(X,Y,rk,8);
       }
     }
@@ -149,7 +149,7 @@ int crypto_stream_speck128256ctr_neon_xor(
   int i;
   u64 nonce[2],K[4],key[34],A,B,C,D,x,y;
   unsigned char block[16];
-  u64 * const block64 = (u64 *)block;
+  u64 *const block64=(u64 *)block;
   u128 rk[34];
 
   if (!inlen) return 0;
@@ -162,11 +162,39 @@ int crypto_stream_speck128256ctr_neon_xor(
   if (inlen<=16){
     D=K[3]; C=K[2]; B=K[1]; A=K[0];
     x=nonce[1]; y=nonce[0]; nonce[0]++;
-    for(i=0;i<33;i+=3){
-      Rx1b(x,y,A); Rx1b(B,A,i);
-      Rx1b(x,y,A); Rx1b(C,A,i+1);
-      Rx1b(x,y,A); Rx1b(D,A,i+2);
-    }
+    Rx1b(x,y,A); Rx1b(B,A,0);
+    Rx1b(x,y,A); Rx1b(C,A,1);
+    Rx1b(x,y,A); Rx1b(D,A,2);
+    Rx1b(x,y,A); Rx1b(B,A,3);
+    Rx1b(x,y,A); Rx1b(C,A,4);
+    Rx1b(x,y,A); Rx1b(D,A,5);
+    Rx1b(x,y,A); Rx1b(B,A,6);
+    Rx1b(x,y,A); Rx1b(C,A,7);
+    Rx1b(x,y,A); Rx1b(D,A,8);
+    Rx1b(x,y,A); Rx1b(B,A,9);
+    Rx1b(x,y,A); Rx1b(C,A,10);
+    Rx1b(x,y,A); Rx1b(D,A,11);
+    Rx1b(x,y,A); Rx1b(B,A,12);
+    Rx1b(x,y,A); Rx1b(C,A,13);
+    Rx1b(x,y,A); Rx1b(D,A,14);
+    Rx1b(x,y,A); Rx1b(B,A,15);
+    Rx1b(x,y,A); Rx1b(C,A,16);
+    Rx1b(x,y,A); Rx1b(D,A,17);
+    Rx1b(x,y,A); Rx1b(B,A,18);
+    Rx1b(x,y,A); Rx1b(C,A,19);
+    Rx1b(x,y,A); Rx1b(D,A,20);
+    Rx1b(x,y,A); Rx1b(B,A,21);
+    Rx1b(x,y,A); Rx1b(C,A,22);
+    Rx1b(x,y,A); Rx1b(D,A,23);
+    Rx1b(x,y,A); Rx1b(B,A,24);
+    Rx1b(x,y,A); Rx1b(C,A,25);
+    Rx1b(x,y,A); Rx1b(D,A,26);
+    Rx1b(x,y,A); Rx1b(B,A,27);
+    Rx1b(x,y,A); Rx1b(C,A,28);
+    Rx1b(x,y,A); Rx1b(D,A,29);
+    Rx1b(x,y,A); Rx1b(B,A,30);
+    Rx1b(x,y,A); Rx1b(C,A,31);
+    Rx1b(x,y,A); Rx1b(D,A,32);
     Rx1b(x,y,A);
     block64[1]=x; block64[0]=y;
     for(i=0;i<inlen;i++) out[i]=block[i]^in[i];
@@ -213,10 +241,10 @@ int crypto_stream_speck128256ctr_neon_xor(
 
 
 
-int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes)
 {
   u64  x[2],y[2];
-  u128 X[4],Y[4];
+  u128 X[4],Y[4],Z[4];
 
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
@@ -226,25 +254,22 @@ int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 r
     return 0;
   }
 
-  SET1(X[0],nonce[1]);
-  SET2(Y[0],nonce[0]);
+  SET1(X[0],nonce[1]); SET2(Y[0],nonce[0]);
 
   if (numbytes==32) Enc(X,Y,rk,2);
   else{
-    X[1]=X[0];
-    SET2(Y[1],nonce[0]);
+    X[1]=X[0]; SET2(Y[1],nonce[0]);
     if (numbytes==64) Enc(X,Y,rk,4);
     else{
-      X[2]=X[0];
-      SET2(Y[2],nonce[0]);
+      X[2]=X[0]; SET2(Y[2],nonce[0]);
       if (numbytes==96) Enc(X,Y,rk,6);
       else{
-        X[3]=X[0];
-	SET2(Y[3],nonce[0]);
+        X[3]=X[0]; SET2(Y[3],nonce[0]);
         Enc(X,Y,rk,8);
       }
     }
   }
+
 
   XOR_STORE(in,out,X[0],Y[0]);
   if (numbytes>=64)  XOR_STORE(in+32,out+32,X[1],Y[1]);
@@ -256,7 +281,7 @@ int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 r
 
 
 
-int ExpandKey(u64 K[], u128 rk[], u64 key[])
+inline __attribute__((always_inline)) int ExpandKey(u64 K[], u128 rk[], u64 key[])
 {
   u64 A=K[0], B=K[1], C=K[2], D=K[3];
 

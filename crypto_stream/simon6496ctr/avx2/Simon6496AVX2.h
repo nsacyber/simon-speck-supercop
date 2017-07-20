@@ -32,7 +32,6 @@
 #define R2x24(X,Y,rk,r,s) (Sx24(X,Y,rk[r][0]), Sx24(Y,X,rk[s][0]))
 #define R2x32(X,Y,rk,r,s) (Sx32(X,Y,rk[r][0]), Sx32(Y,X,rk[s][0]))
 
-
 #define f(x) ((LCS(x,1) & LCS(x,8)) ^ LCS(x,2))
 #define R2(x,y,k1,k2) (y^=f(x), y^=k1, x^=f(y), x^=k2)
 
@@ -49,7 +48,6 @@
 
 #define _D SET(0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff)
 #define _C SET(0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00)
-
 
 #define RKBS(rk,r,_V) (rk[r][7]= _D ^ rk[r-3][7] ^ ROR8(rk[r-1][2] ^ rk[r-1][3]), \
                        rk[r][6]= _D ^ rk[r-3][6] ^ ROR8(rk[r-1][1] ^ rk[r-1][2]), \
@@ -78,7 +76,7 @@
 					C^=c2^(RCS(B,3)^RCS(B,4)), key[i+2]=C, SET1(rk[i+2][0],C))
 
 #define EKNBS(A,B,C,rk,key) (SET1(rk[0][0],A), key[0]=A, SET1(rk[1][0],B), key[1]=B, SET1(rk[2][0],C), key[2]=C, \
-			       RKNBS(_d,_c,_d,A,B,C,rk,key,3),  RKNBS(_c,_d,_d,A,B,C,rk,key,6),  RKNBS(_d,_d,_c,A,B,C,rk,key,9),  RKNBS(_d,_d,_d,A,B,C,rk,key,12), \
-			       RKNBS(_c,_c,_c,A,B,C,rk,key,15), RKNBS(_c,_c,_c,A,B,C,rk,key,18), RKNBS(_d,_d,_c,A,B,C,rk,key,21), RKNBS(_d,_c,_c,A,B,C,rk,key,24), \
-			       RKNBS(_d,_c,_c,A,B,C,rk,key,27), RKNBS(_d,_d,_c,A,B,C,rk,key,30), RKNBS(_c,_c,_d,A,B,C,rk,key,33), RKNBS(_c,_d,_c,A,B,C,rk,key,36), \
-			       RKNBS(_c,_c,_c,A,B,C,rk,key,39))
+			     RKNBS(_d,_c,_d,A,B,C,rk,key,3),  RKNBS(_c,_d,_d,A,B,C,rk,key,6),  RKNBS(_d,_d,_c,A,B,C,rk,key,9),  RKNBS(_d,_d,_d,A,B,C,rk,key,12), \
+			     RKNBS(_c,_c,_c,A,B,C,rk,key,15), RKNBS(_c,_c,_c,A,B,C,rk,key,18), RKNBS(_d,_d,_c,A,B,C,rk,key,21), RKNBS(_d,_c,_c,A,B,C,rk,key,24), \
+			     RKNBS(_d,_c,_c,A,B,C,rk,key,27), RKNBS(_d,_d,_c,A,B,C,rk,key,30), RKNBS(_c,_c,_d,A,B,C,rk,key,33), RKNBS(_c,_d,_c,A,B,C,rk,key,36), \
+			     RKNBS(_c,_c,_c,A,B,C,rk,key,39))

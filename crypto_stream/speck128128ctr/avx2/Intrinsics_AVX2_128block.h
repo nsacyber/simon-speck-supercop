@@ -2,7 +2,7 @@
 //is used for all of our AVX2 implementations of Simon
 //and Speck with 128-bit block sizes.
 
-#include <x86intrin.h>
+#include <immintrin.h>
 
 
 #define u32 unsigned

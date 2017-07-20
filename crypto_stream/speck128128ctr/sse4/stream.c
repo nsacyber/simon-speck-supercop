@@ -20,10 +20,10 @@
 #include "Speck128128SSE4.h"
 
 int crypto_stream_speck128128ctr_sse4(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes);
+int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes);
 int crypto_stream_speck128128ctr_sse4_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes);
-static int ExpandKey(u64 K[], u128 rk[], u64 key[]);
+int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes);
+int ExpandKey(u64 K[], u128 rk[], u64 key[]);
 
 
 

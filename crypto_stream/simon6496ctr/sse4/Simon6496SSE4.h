@@ -13,7 +13,6 @@
  ***********************************************************************************/
 
 
-
 #include "Intrinsics_SSE4_64block.h"
 
 
@@ -38,12 +37,11 @@
 #define R2x1(x,y,k,r,s) (R2(x[0],y[0],k[r],k[s]))
 #define R2x2(x,y,k,r,s) (R2(x[0],y[0],k[r],k[s]), R2(x[1],y[1],k[r],k[s]))
 
-#define Enc(X,Y,rk,n) (R2x##n(X,Y,rk,0,1),   R2x##n(X,Y,rk,2,3),   R2x##n(X,Y,rk,4,5),   R2x##n(X,Y,rk,6,7),   R2x##n(X,Y,rk,8,9),\
-		       R2x##n(X,Y,rk,10,11), R2x##n(X,Y,rk,12,13), R2x##n(X,Y,rk,14,15), R2x##n(X,Y,rk,16,17), R2x##n(X,Y,rk,18,19),\
-		       R2x##n(X,Y,rk,20,21), R2x##n(X,Y,rk,22,23), R2x##n(X,Y,rk,24,25), R2x##n(X,Y,rk,26,27), R2x##n(X,Y,rk,28,29),\
-		       R2x##n(X,Y,rk,30,31), R2x##n(X,Y,rk,32,33), R2x##n(X,Y,rk,34,35), R2x##n(X,Y,rk,36,37), R2x##n(X,Y,rk,38,39),\
+#define Enc(X,Y,rk,n) (R2x##n(X,Y,rk,0,1),   R2x##n(X,Y,rk,2,3),   R2x##n(X,Y,rk,4,5),   R2x##n(X,Y,rk,6,7),   R2x##n(X,Y,rk,8,9), \
+		       R2x##n(X,Y,rk,10,11), R2x##n(X,Y,rk,12,13), R2x##n(X,Y,rk,14,15), R2x##n(X,Y,rk,16,17), R2x##n(X,Y,rk,18,19), \
+		       R2x##n(X,Y,rk,20,21), R2x##n(X,Y,rk,22,23), R2x##n(X,Y,rk,24,25), R2x##n(X,Y,rk,26,27), R2x##n(X,Y,rk,28,29), \
+		       R2x##n(X,Y,rk,30,31), R2x##n(X,Y,rk,32,33), R2x##n(X,Y,rk,34,35), R2x##n(X,Y,rk,36,37), R2x##n(X,Y,rk,38,39), \
 		       R2x##n(X,Y,rk,40,41))
-
 
 
 #define _D SET(0xffffffff,0xffffffff,0xffffffff,0xffffffff)
@@ -75,7 +73,7 @@
                                         C^=c2^(RCS(B,3)^RCS(B,4)), key[i+2]=C, SET1(rk[i+2][0],C))
 
 #define EKNBS(A,B,C,rk,key) (SET1(rk[0][0],A), key[0]=A, SET1(rk[1][0],B), key[1]=B, SET1(rk[2][0],C), key[2]=C, \
-			       RKNBS(_d,_c,_d,A,B,C,rk,key,3),  RKNBS(_c,_d,_d,A,B,C,rk,key,6),  RKNBS(_d,_d,_c,A,B,C,rk,key,9),  RKNBS(_d,_d,_d,A,B,C,rk,key,12), \
-			       RKNBS(_c,_c,_c,A,B,C,rk,key,15), RKNBS(_c,_c,_c,A,B,C,rk,key,18), RKNBS(_d,_d,_c,A,B,C,rk,key,21), RKNBS(_d,_c,_c,A,B,C,rk,key,24), \
-			       RKNBS(_d,_c,_c,A,B,C,rk,key,27), RKNBS(_d,_d,_c,A,B,C,rk,key,30), RKNBS(_c,_c,_d,A,B,C,rk,key,33), RKNBS(_c,_d,_c,A,B,C,rk,key,36), \
-			       RKNBS(_c,_c,_c,A,B,C,rk,key,39))
+			     RKNBS(_d,_c,_d,A,B,C,rk,key,3),  RKNBS(_c,_d,_d,A,B,C,rk,key,6),  RKNBS(_d,_d,_c,A,B,C,rk,key,9),  RKNBS(_d,_d,_d,A,B,C,rk,key,12), \
+			     RKNBS(_c,_c,_c,A,B,C,rk,key,15), RKNBS(_c,_c,_c,A,B,C,rk,key,18), RKNBS(_d,_d,_c,A,B,C,rk,key,21), RKNBS(_d,_c,_c,A,B,C,rk,key,24), \
+			     RKNBS(_d,_c,_c,A,B,C,rk,key,27), RKNBS(_d,_d,_c,A,B,C,rk,key,30), RKNBS(_c,_c,_d,A,B,C,rk,key,33), RKNBS(_c,_d,_c,A,B,C,rk,key,36), \
+			     RKNBS(_c,_c,_c,A,B,C,rk,key,39))

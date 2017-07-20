@@ -47,18 +47,17 @@
                        R2x##n(X,Y,rk,40,41), R2x##n(X,Y,rk,42,43))
 
 
-
 #define _D SET(0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff)
 #define _C SET(0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00,0xffffff00)
 
 #define RKBS(rk,r,_V) (rk[r][7]= _D ^ rk[r-4][7] ^ ROR8(rk[r-1][2])  ^ rk[r-3][7] ^ ROR8(rk[r-1][3])  ^ ROR8(rk[r-3][0]), \
-                    rk[r][6]= _D ^ rk[r-4][6] ^ ROR8(rk[r-1][1])  ^ rk[r-3][6] ^ ROR8(rk[r-1][2])  ^ rk[r-3][7], \
-                    rk[r][5]= _D ^ rk[r-4][5] ^ ROR8(rk[r-1][0])  ^ rk[r-3][5] ^ ROR8(rk[r-1][1])  ^ rk[r-3][6], \
-                    rk[r][4]= _D ^ rk[r-4][4] ^       rk[r-1][7]  ^ rk[r-3][4] ^ ROR8(rk[r-1][0])  ^ rk[r-3][5], \
-                    rk[r][3]= _D ^ rk[r-4][3] ^       rk[r-1][6]  ^ rk[r-3][3] ^       rk[r-1][7]  ^ rk[r-3][4], \
-                    rk[r][2]= _D ^ rk[r-4][2] ^       rk[r-1][5]  ^ rk[r-3][2] ^       rk[r-1][6]  ^ rk[r-3][3], \
-                    rk[r][1]= _C ^ rk[r-4][1] ^       rk[r-1][4]  ^ rk[r-3][1] ^       rk[r-1][5]  ^ rk[r-3][2], \
-                    rk[r][0]= _V ^ rk[r-4][0] ^       rk[r-1][3]  ^ rk[r-3][0] ^       rk[r-1][4]  ^ rk[r-3][1])
+		       rk[r][6]= _D ^ rk[r-4][6] ^ ROR8(rk[r-1][1])  ^ rk[r-3][6] ^ ROR8(rk[r-1][2])  ^ rk[r-3][7], \
+		       rk[r][5]= _D ^ rk[r-4][5] ^ ROR8(rk[r-1][0])  ^ rk[r-3][5] ^ ROR8(rk[r-1][1])  ^ rk[r-3][6], \
+		       rk[r][4]= _D ^ rk[r-4][4] ^       rk[r-1][7]  ^ rk[r-3][4] ^ ROR8(rk[r-1][0])  ^ rk[r-3][5], \
+		       rk[r][3]= _D ^ rk[r-4][3] ^       rk[r-1][6]  ^ rk[r-3][3] ^       rk[r-1][7]  ^ rk[r-3][4], \
+		       rk[r][2]= _D ^ rk[r-4][2] ^       rk[r-1][5]  ^ rk[r-3][2] ^       rk[r-1][6]  ^ rk[r-3][3], \
+		       rk[r][1]= _C ^ rk[r-4][1] ^       rk[r-1][4]  ^ rk[r-3][1] ^       rk[r-1][5]  ^ rk[r-3][2], \
+		       rk[r][0]= _V ^ rk[r-4][0] ^       rk[r-1][3]  ^ rk[r-3][0] ^       rk[r-1][4]  ^ rk[r-3][1])
 
 #define EKBS(rk) (RKBS(rk,4,_D),  RKBS(rk,5,_D),  RKBS(rk,6,_C),  RKBS(rk,7,_D),  RKBS(rk,8,_D),  RKBS(rk,9,_C),  RKBS(rk,10,_D), RKBS(rk,11,_D), \
                   RKBS(rk,12,_D), RKBS(rk,13,_C), RKBS(rk,14,_D), RKBS(rk,15,_C), RKBS(rk,16,_D), RKBS(rk,17,_D), RKBS(rk,18,_C), RKBS(rk,19,_C), \

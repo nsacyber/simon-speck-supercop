@@ -22,12 +22,12 @@
 
 
 int crypto_stream_simon6496ctr_sse4(unsigned char *out, unsigned long long outlen, const unsigned char *n, const unsigned char *k);
-int Encrypt(unsigned char *out,u32 nonce[],u128 rk[][8],u32 key[],int numbytes);
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out,u32 nonce[],u128 rk[][8],u32 key[],int numbytes);
 int crypto_stream_simon6496ctr_sse4_xor(unsigned char *out, const unsigned char *in, unsigned long long inlen, const unsigned char *n, const unsigned char *k);
-int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[][8], u32 key[], int numbytes);
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[][8], u32 key[], int numbytes);
 int ExpandKeyBS(u32 K[],u128 rk[][8]);
 int ExpandKeyNBS(u32 K[], u128 rk[][8], u32 key[]);
-inline int Transpose(u128 M[]);
+inline __attribute__((always_inline)) int Transpose(u128 M[]);
 
 
 
@@ -51,7 +51,7 @@ int crypto_stream_simon6496ctr_sse4(
 
   for(i=0;i<numkeywords;i++) K[i]=((u32 *)k)[i];
 
-  if (outlen>=768){
+  if (outlen>=256){
     ExpandKeyBS(K,rk);
 
     while(outlen>=256){
@@ -104,7 +104,7 @@ int crypto_stream_simon6496ctr_sse4(
 
 
 
-int Encrypt(unsigned char *out,u32 nonce[],u128 rk[][8],u32 key[],int numbytes)
+inline __attribute__((always_inline)) int Encrypt(unsigned char *out,u32 nonce[],u128 rk[][8],u32 key[],int numbytes)
 {
   u32  i,j,x[2],y[2];
   u128 X[8],Y[8];
@@ -198,7 +198,7 @@ int crypto_stream_simon6496ctr_sse4_xor(
 
   for(i=0;i<numkeywords;i++) K[i]=((u32 *)k)[i];
 
-  if (inlen>=768){
+  if (inlen>=256){
     ExpandKeyBS(K,rk);
 
     while(inlen>=256){
@@ -252,7 +252,7 @@ int crypto_stream_simon6496ctr_sse4_xor(
 
 
 
-int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[][8], u32 key[], int numbytes)
+inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const unsigned char *in, u32 nonce[], u128 rk[][8], u32 key[], int numbytes)
 {
   u32 i,j,x[2],y[2];
   u128 X[8],Y[8];
@@ -356,7 +356,7 @@ int ExpandKeyNBS(u32 K[], u128 rk[][8], u32 key[])
 
 
 
-inline int Transpose(u128 M[])
+inline __attribute__((always_inline)) int Transpose(u128 M[])
 {
   u128 W[4];
   const u128 mask4 = SET(0x0f0f0f0f,0x0f0f0f0f,0x0f0f0f0f,0x0f0f0f0f);
