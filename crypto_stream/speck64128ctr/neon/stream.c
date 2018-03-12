@@ -34,8 +34,7 @@ int crypto_stream_speck64128ctr_neon(
   const unsigned char *k
 )
 {
-  int i;
-  u32 nonce[2], K[4], key[27],A,B,C,D,x,y;
+  u32 i, nonce[2], K[4], key[27],A,B,C,D,x,y;
   unsigned char block[8];
   u32 * const block32 = (u32 *)block;
   u128 rk[27];
@@ -161,8 +160,7 @@ int crypto_stream_speck64128ctr_neon_xor(
   const unsigned char *k
 )
 {
-  int i;
-  u32 nonce[2],K[4],key[27],A,B,C,D,x,y;
+  u32 i, nonce[2],K[4],key[27],A,B,C,D,x,y;
   unsigned char block[8];
   u32 * const block32 = (u32 *)block;
   u64 * const block64 = (u64 *)block;

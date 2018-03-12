@@ -22,23 +22,15 @@
 
 #define R(U,V,k)   (V=XOR(V,ROL(U,2)), V=XOR(V,AND(ROL(U,1),ROL8(U))), V=XOR(V,k))
 
-#define Sx4(U,V,k)  (R(U[0],V[0],k))
-#define Sx8(U,V,k)  (R(U[0],V[0],k), R(U[1],V[1],k))
-#define Sx12(U,V,k) (R(U[0],V[0],k), R(U[1],V[1],k), R(U[2],V[2],k))
+#define R1x4(U,V,k)  (R(U[0],V[0],k))
+#define R1x8(U,V,k)  (R(U[0],V[0],k), R(U[1],V[1],k))
+#define R1x12(U,V,k) (R(U[0],V[0],k), R(U[1],V[1],k), R(U[2],V[2],k))
+#define R1x16(U,V,k) (R(U[0],V[0],k), R(U[1],V[1],k), R(U[2],V[2],k), R(U[3],V[3],k))
 
-#define R2x4(X,Y,rk,r,s)  (Sx4(X,Y,rk[r][0]),  Sx4(Y,X,rk[s][0]))
-#define R2x8(X,Y,rk,r,s)  (Sx8(X,Y,rk[r][0]),  Sx8(Y,X,rk[s][0]))
-#define R2x12(X,Y,rk,r,s) (Sx12(X,Y,rk[r][0]), Sx12(Y,X,rk[s][0]))
-
-
-#define R2x16(X,Y,rk,r,s) (Y[0]=XOR(XOR(rk[r][0],Y[0]),ROL4(XOR(AND(X[3],ROL4(X[0])),X[2]))), \
-                           Y[1]=XOR(XOR(rk[r][1],Y[1]),XOR(AND(X[0],ROL8(X[1])),ROL4(X[3]))), \
-                           Y[2]=XOR(XOR(rk[r][2],Y[2]),XOR(AND(X[1],ROL8(X[2])),X[0])),	\
-                           Y[3]=XOR(XOR(rk[r][3],Y[3]),XOR(AND(X[2],ROL8(X[3])),X[1])),	\
-                           X[0]=XOR(XOR(rk[s][0],X[0]),ROL4(XOR(AND(Y[3],ROL4(Y[0])),Y[2]))), \
-                           X[1]=XOR(XOR(rk[s][1],X[1]),XOR(AND(Y[0],ROL8(Y[1])),ROL4(Y[3]))), \
-                           X[2]=XOR(XOR(rk[s][2],X[2]),XOR(AND(Y[1],ROL8(Y[2])),Y[0])),	\
-                           X[3]=XOR(XOR(rk[s][3],X[3]),XOR(AND(Y[2],ROL8(Y[3])),Y[1])))
+#define R2x4(X,Y,rk,r,s)  (R1x4(X,Y,rk[r][0]),  R1x4(Y,X,rk[s][0]))
+#define R2x8(X,Y,rk,r,s)  (R1x8(X,Y,rk[r][0]),  R1x8(Y,X,rk[s][0]))
+#define R2x12(X,Y,rk,r,s) (R1x12(X,Y,rk[r][0]), R1x12(Y,X,rk[s][0]))
+#define R2x16(X,Y,rk,r,s) (R1x16(X,Y,rk[r][0]), R1x16(Y,X,rk[s][0]))
 
 #define R2x32(X,Y,rk,r,s) (Y[2]=XOR(XOR(rk[r][2],Y[2]),XOR(AND(X[1],ROL8(X[2])),X[0])),	\
                            Y[3]=XOR(XOR(rk[r][3],Y[3]),XOR(AND(X[2],ROL8(X[3])),X[1])),	\
@@ -71,43 +63,28 @@
 		       R2x##n(X,Y,rk,40,41), R2x##n(X,Y,rk,42,43))
 
 
-#define _D4 SET(0xffffffffffffffffLL,0xffffffffffffffffLL)
-#define _C4 SET(0xfffffff0fffffff0LL,0xfffffff0fffffff0LL)
-
-#define RKBS4(rk,r,_V) (rk[r][3]=_D4 ^ rk[r-4][3] ^ rk[r-3][3] ^ ROR4(rk[r-1][2] ^ rk[r-1][3] ^ rk[r-3][0]), \
-                        rk[r][2]=_D4 ^ rk[r-4][2] ^ rk[r-3][2] ^ rk[r-3][3] ^ ROR4(rk[r-1][1] ^ rk[r-1][2]), \
-                        rk[r][1]=_C4 ^ rk[r-4][1] ^ rk[r-3][1] ^ rk[r-3][2] ^ ROR4(rk[r-1][0] ^ rk[r-1][1]), \
-                        rk[r][0]=_V  ^ rk[r-4][0] ^ rk[r-3][0] ^ rk[r-3][1] ^ ROR4(rk[r-1][0]) ^ rk[r-1][3])
-
-#define EKBS4(rk) (RKBS4(rk,4,_D4),  RKBS4(rk,5,_D4),  RKBS4(rk,6,_C4),  RKBS4(rk,7,_D4),  RKBS4(rk,8,_D4),  RKBS4(rk,9,_C4), \
-                   RKBS4(rk,10,_D4), RKBS4(rk,11,_D4), RKBS4(rk,12,_D4), RKBS4(rk,13,_C4), RKBS4(rk,14,_D4), RKBS4(rk,15,_C4), \
-                   RKBS4(rk,16,_D4), RKBS4(rk,17,_D4), RKBS4(rk,18,_C4), RKBS4(rk,19,_C4), RKBS4(rk,20,_C4), RKBS4(rk,21,_D4), \
-                   RKBS4(rk,22,_D4), RKBS4(rk,23,_C4), RKBS4(rk,24,_C4), RKBS4(rk,25,_D4), RKBS4(rk,26,_C4), RKBS4(rk,27,_D4), \
-                   RKBS4(rk,28,_D4), RKBS4(rk,29,_D4), RKBS4(rk,30,_D4), RKBS4(rk,31,_C4), RKBS4(rk,32,_C4), RKBS4(rk,33,_C4), \
-                   RKBS4(rk,34,_C4), RKBS4(rk,35,_C4), RKBS4(rk,36,_C4), RKBS4(rk,37,_D4), RKBS4(rk,38,_C4), RKBS4(rk,39,_C4), \
-                   RKBS4(rk,40,_D4), RKBS4(rk,41,_C4), RKBS4(rk,42,_C4), RKBS4(rk,43,_C4))
 
 
 
-#define _D8 SET(0xffffffffffffffffLL,0xffffffffffffffffLL)
-#define _C8 SET(0xffffff00ffffff00LL,0xffffff00ffffff00LL)
+#define _D SET(0xffffffffffffffffLL,0xffffffffffffffffLL)
+#define _C SET(0xffffff00ffffff00LL,0xffffff00ffffff00LL)
 
-#define RKBS8(rk,r,_V) (rk[r][7]= _D8 ^ rk[r-4][7] ^ rk[r-3][7] ^ ROR8(rk[r-1][2]^rk[r-1][3]^rk[r-3][0]), \
-                        rk[r][6]= _D8 ^ rk[r-4][6] ^ rk[r-3][6] ^ rk[r-3][7] ^ ROR8(rk[r-1][1]^rk[r-1][2]), \
-                        rk[r][5]= _D8 ^ rk[r-4][5] ^ rk[r-3][5] ^ rk[r-3][6] ^ ROR8(rk[r-1][0] ^ rk[r-1][1]), \
-                        rk[r][4]= _D8 ^ rk[r-4][4] ^ rk[r-1][7]       ^ rk[r-3][4] ^ ROR8(rk[r-1][0]) ^ rk[r-3][5], \
-                        rk[r][3]= _D8 ^ rk[r-4][3] ^ rk[r-1][6]       ^ rk[r-3][3] ^ rk[r-1][7]       ^ rk[r-3][4], \
-                        rk[r][2]= _D8 ^ rk[r-4][2] ^ rk[r-1][5]       ^ rk[r-3][2] ^ rk[r-1][6]       ^ rk[r-3][3], \
-                        rk[r][1]= _C8 ^ rk[r-4][1] ^ rk[r-1][4]       ^ rk[r-3][1] ^ rk[r-1][5]       ^ rk[r-3][2], \
-                        rk[r][0]= _V ^ rk[r-4][0] ^ rk[r-1][3]       ^ rk[r-3][0] ^ rk[r-1][4]       ^ rk[r-3][1])
+#define RKBS(rk,r,_V) (rk[r][7]= _D ^ rk[r-4][7] ^ rk[r-3][7] ^ ROR8(rk[r-1][2]^rk[r-1][3]^rk[r-3][0]), \
+                       rk[r][6]= _D ^ rk[r-4][6] ^ rk[r-3][6] ^ rk[r-3][7] ^ ROR8(rk[r-1][1]^rk[r-1][2]), \
+                       rk[r][5]= _D ^ rk[r-4][5] ^ rk[r-3][5] ^ rk[r-3][6] ^ ROR8(rk[r-1][0] ^ rk[r-1][1]), \
+                       rk[r][4]= _D ^ rk[r-4][4] ^ rk[r-1][7]       ^ rk[r-3][4] ^ ROR8(rk[r-1][0]) ^ rk[r-3][5], \
+                       rk[r][3]= _D ^ rk[r-4][3] ^ rk[r-1][6]       ^ rk[r-3][3] ^ rk[r-1][7]       ^ rk[r-3][4], \
+                       rk[r][2]= _D ^ rk[r-4][2] ^ rk[r-1][5]       ^ rk[r-3][2] ^ rk[r-1][6]       ^ rk[r-3][3], \
+                       rk[r][1]= _C ^ rk[r-4][1] ^ rk[r-1][4]       ^ rk[r-3][1] ^ rk[r-1][5]       ^ rk[r-3][2], \
+                       rk[r][0]= _V ^ rk[r-4][0] ^ rk[r-1][3]       ^ rk[r-3][0] ^ rk[r-1][4]       ^ rk[r-3][1])
 
-#define EKBS8(rk) (RKBS8(rk,4,_D8),  RKBS8(rk,5,_D8),  RKBS8(rk,6,_C8),  RKBS8(rk,7,_D8),  RKBS8(rk,8,_D8),  RKBS8(rk,9,_C8), \
-                   RKBS8(rk,10,_D8), RKBS8(rk,11,_D8), RKBS8(rk,12,_D8), RKBS8(rk,13,_C8), RKBS8(rk,14,_D8), RKBS8(rk,15,_C8), \
-                   RKBS8(rk,16,_D8), RKBS8(rk,17,_D8), RKBS8(rk,18,_C8), RKBS8(rk,19,_C8), RKBS8(rk,20,_C8), RKBS8(rk,21,_D8), \
-                   RKBS8(rk,22,_D8), RKBS8(rk,23,_C8), RKBS8(rk,24,_C8), RKBS8(rk,25,_D8), RKBS8(rk,26,_C8), RKBS8(rk,27,_D8), \
-                   RKBS8(rk,28,_D8), RKBS8(rk,29,_D8), RKBS8(rk,30,_D8), RKBS8(rk,31,_C8), RKBS8(rk,32,_C8), RKBS8(rk,33,_C8), \
-                   RKBS8(rk,34,_C8), RKBS8(rk,35,_C8), RKBS8(rk,36,_C8), RKBS8(rk,37,_D8), RKBS8(rk,38,_C8), RKBS8(rk,39,_C8), \
-                   RKBS8(rk,40,_D8), RKBS8(rk,41,_C8), RKBS8(rk,42,_C8), RKBS8(rk,43,_C8))
+#define EKBS(rk) (RKBS(rk,4,_D),  RKBS(rk,5,_D),  RKBS(rk,6,_C),  RKBS(rk,7,_D),  RKBS(rk,8,_D),  RKBS(rk,9,_C), \
+                  RKBS(rk,10,_D), RKBS(rk,11,_D), RKBS(rk,12,_D), RKBS(rk,13,_C), RKBS(rk,14,_D), RKBS(rk,15,_C), \
+                  RKBS(rk,16,_D), RKBS(rk,17,_D), RKBS(rk,18,_C), RKBS(rk,19,_C), RKBS(rk,20,_C), RKBS(rk,21,_D), \
+                  RKBS(rk,22,_D), RKBS(rk,23,_C), RKBS(rk,24,_C), RKBS(rk,25,_D), RKBS(rk,26,_C), RKBS(rk,27,_D), \
+                  RKBS(rk,28,_D), RKBS(rk,29,_D), RKBS(rk,30,_D), RKBS(rk,31,_C), RKBS(rk,32,_C), RKBS(rk,33,_C), \
+                  RKBS(rk,34,_C), RKBS(rk,35,_C), RKBS(rk,36,_C), RKBS(rk,37,_D), RKBS(rk,38,_C), RKBS(rk,39,_C), \
+                  RKBS(rk,40,_D), RKBS(rk,41,_C), RKBS(rk,42,_C), RKBS(rk,43,_C))
 
 
 
@@ -130,23 +107,17 @@
 #define mask2  (u128)SET(0x3333333333333333LL,0x3333333333333333LL)
 #define mask1  (u128)SET(0x5555555555555555LL,0x5555555555555555LL)
 
-#define Transpose4(M) (W[0]=AND(XOR(SR(M[0],2),M[2]),mask2), M[2]=XOR(M[2],W[0]), M[0]=XOR(M[0],SL(W[0],2)), \
-                       W[1]=AND(XOR(SR(M[1],2),M[3]),mask2), M[3]=XOR(M[3],W[1]), M[1]=XOR(M[1],SL(W[1],2)), \
-                       W[0]=AND(XOR(SR(M[0],1),M[1]),mask1), M[1]=XOR(M[1],W[0]), M[0]=XOR(M[0],SL(W[0],1)), \
-                       W[1]=AND(XOR(SR(M[2],1),M[3]),mask1), M[3]=XOR(M[3],W[1]), M[2]=XOR(M[2],SL(W[1],1)))
-
-#define Transpose8(M) (W[0] = AND(XOR(SR(M[0],4),M[4]),  mask4), M[4] = XOR(M[4], W[0]), W[0] = SL(W[0],4), M[0] = XOR(M[0], W[0]), \
-                       W[1] = AND(XOR(SR(M[1],4),M[5]),  mask4), M[5] = XOR(M[5], W[1]), W[1] = SL(W[1],4), M[1] = XOR(M[1], W[1]), \
-                       W[2] = AND(XOR(SR(M[2],4),M[6]),  mask4), M[6] = XOR(M[6], W[2]), W[2] = SL(W[2],4), M[2] = XOR(M[2], W[2]), \
-                       W[3] = AND(XOR(SR(M[3],4),M[7]),  mask4), M[7] = XOR(M[7], W[3]), W[3] = SL(W[3],4), M[3] = XOR(M[3], W[3]), \
-                       W[0] = AND(XOR(SR(M[0],2),M[2]),  mask2), M[2] = XOR(M[2], W[0]), W[0] = SL(W[0],2), M[0] = XOR(M[0], W[0]), \
-                       W[1] = AND( XOR(SR(M[1],2),M[3]), mask2), M[3] = XOR(M[3], W[1]), W[1] = SL(W[1],2), M[1] = XOR(M[1], W[1]), \
-                       W[2] = AND( XOR(SR(M[4],2),M[6]), mask2), M[6] = XOR(M[6], W[2]), W[2] = SL(W[2],2), M[4] = XOR(M[4], W[2]), \
-                       W[3] = AND( XOR(SR(M[5],2),M[7]), mask2), M[7] = XOR(M[7], W[3]), W[3] = SL(W[3],2), M[5] = XOR(M[5], W[3]), \
-                       W[0] = AND(XOR(SR(M[0],1),M[1]),  mask1), M[1] = XOR(M[1], W[0]), W[0] = SL(W[0],1), M[0] = XOR(M[0], W[0]), \
-                       W[1] = AND( XOR(SR(M[2],1),M[3]), mask1), M[3] = XOR(M[3], W[1]), W[1] = SL(W[1],1), M[2] = XOR(M[2], W[1]), \
-                       W[2] = AND( XOR(SR(M[4],1),M[5]), mask1), M[5] = XOR(M[5], W[2]), W[2] = SL(W[2],1), M[4] = XOR(M[4], W[2]), \
-                       W[3] = AND( XOR(SR(M[6],1),M[7]), mask1), M[7] = XOR(M[7], W[3]), W[3] = SL(W[3],1), M[6] = XOR(M[6], W[3]))
+#define Transpose(M) (W[0] = AND(XOR(SR(M[0],4),M[4]),  mask4), M[4] = XOR(M[4], W[0]), W[0] = SL(W[0],4), M[0] = XOR(M[0], W[0]), \
+                      W[1] = AND(XOR(SR(M[1],4),M[5]),  mask4), M[5] = XOR(M[5], W[1]), W[1] = SL(W[1],4), M[1] = XOR(M[1], W[1]), \
+                      W[2] = AND(XOR(SR(M[2],4),M[6]),  mask4), M[6] = XOR(M[6], W[2]), W[2] = SL(W[2],4), M[2] = XOR(M[2], W[2]), \
+                      W[3] = AND(XOR(SR(M[3],4),M[7]),  mask4), M[7] = XOR(M[7], W[3]), W[3] = SL(W[3],4), M[3] = XOR(M[3], W[3]), \
+                      W[0] = AND(XOR(SR(M[0],2),M[2]),  mask2), M[2] = XOR(M[2], W[0]), W[0] = SL(W[0],2), M[0] = XOR(M[0], W[0]), \
+                      W[1] = AND( XOR(SR(M[1],2),M[3]), mask2), M[3] = XOR(M[3], W[1]), W[1] = SL(W[1],2), M[1] = XOR(M[1], W[1]), \
+                      W[2] = AND( XOR(SR(M[4],2),M[6]), mask2), M[6] = XOR(M[6], W[2]), W[2] = SL(W[2],2), M[4] = XOR(M[4], W[2]), \
+                      W[3] = AND( XOR(SR(M[5],2),M[7]), mask2), M[7] = XOR(M[7], W[3]), W[3] = SL(W[3],2), M[5] = XOR(M[5], W[3]), \
+                      W[0] = AND(XOR(SR(M[0],1),M[1]),  mask1), M[1] = XOR(M[1], W[0]), W[0] = SL(W[0],1), M[0] = XOR(M[0], W[0]), \
+                      W[1] = AND( XOR(SR(M[2],1),M[3]), mask1), M[3] = XOR(M[3], W[1]), W[1] = SL(W[1],1), M[2] = XOR(M[2], W[1]), \
+                      W[2] = AND( XOR(SR(M[4],1),M[5]), mask1), M[5] = XOR(M[5], W[2]), W[2] = SL(W[2],1), M[4] = XOR(M[4], W[2]), \
+                      W[3] = AND( XOR(SR(M[6],1),M[7]), mask1), M[7] = XOR(M[7], W[3]), W[3] = SL(W[3],1), M[6] = XOR(M[6], W[3]))
 
 
-#define Transpose(M,n) Transpose##n(M)

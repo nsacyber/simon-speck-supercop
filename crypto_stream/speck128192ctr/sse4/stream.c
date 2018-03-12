@@ -254,7 +254,7 @@ int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 r
 
 
 
-static int ExpandKey(u64 K[], u128 rk[], u64 key[])
+int ExpandKey(u64 K[], u128 rk[], u64 key[])
 {
   u64 A=K[0], B=K[1], C=K[2];
 

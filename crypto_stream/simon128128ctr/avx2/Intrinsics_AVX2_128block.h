@@ -4,6 +4,7 @@
 
 #include <immintrin.h>
 
+
 #define u32 unsigned
 #define u64 unsigned long long
 #define u256 __m256i
@@ -34,8 +35,7 @@
 #define SHFL _mm256_shuffle_epi8
 #define R8 SET(0x080f0e0d0c0b0a09LL,0x0007060504030201LL,0x080f0e0d0c0b0a09LL,0x0007060504030201LL)
 #define L8 SET(0x0e0d0c0b0a09080fLL,0x0605040302010007LL,0x0e0d0c0b0a09080fLL,0x0605040302010007LL)
-
-#define ROL(X,r) (XOR(SL(X,r),SR(X,(64-r))))
-#define ROR(X,r) (XOR(SR(X,r),SL(X,(64-r))))
 #define ROL8(X)  (SHFL(X,L8))
 #define ROR8(X)  (SHFL(X,R8))
+#define ROL(X,r) (XOR(SL(X,r),SR(X,(64-r))))
+#define ROR(X,r) (XOR(SR(X,r),SL(X,(64-r))))

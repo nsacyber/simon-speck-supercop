@@ -24,7 +24,7 @@
 #define Rx4(X,Y,k)  (R(X[0],Y[0],k))
 #define Rx8(X,Y,k)  (R(X[0],Y[0],k), R(X[1],Y[1],k))
 #define Rx12(X,Y,k) (R(X[0],Y[0],k), R(X[1],Y[1],k), R(X[2],Y[2],k))
-#define Rx16(X,Y,k) (X[0]=ROR8(X[0]), X[1]=ROR8(X[1]), X[2]=ROR8(X[2]), X[3]=ROR8(X[3]), \
+#define Rx16(X,Y,k) (X[0]=ROR8(X[0]), X[1]=ROR8(X[1]), X[2]=ROR8(X]=ROR8(X[3]), \
                      X[0]=ADD(X[0],Y[0]), X[1]=ADD(X[1],Y[1]), X[2]=ADD(X[2],Y[2]), X[3]=ADD(X[3],Y[3]), \
                      X[0]=XOR(X[0],k), X[1]=XOR(X[1],k), X[2]=XOR(X[2],k), X[3]=XOR(X[3],k), \
                      Z[0]=Y[0], Z[1]=Y[1], Z[2]=Y[2], Z[3]=Y[3],	\

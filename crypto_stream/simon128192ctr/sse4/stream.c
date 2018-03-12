@@ -105,7 +105,7 @@ inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u64 nonce[
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
     Enc(x,y,key,1);
-    ((u64 *)out)[1]=x[0]; ((u64 *)out)[0]=y[0];
+    ((u64 *)out)[1]=y[0]; ((u64 *)out)[0]=x[0];
 
     return 0;
   }
@@ -147,15 +147,15 @@ inline __attribute__((always_inline)) int Encrypt(unsigned char *out, u64 nonce[
 
   nonce[0]+=(numbytes>>4);
 
-  STORE(out,X[0],Y[0]);
-  if (numbytes>=64)  STORE(out+32,X[1],Y[1]);
-  if (numbytes>=96)  STORE(out+64,X[2],Y[2]);
-  if (numbytes>=128) STORE(out+96,X[3],Y[3]);
+  STORE(out,Y[0],X[0]);
+  if (numbytes>=64)  STORE(out+32,Y[1],X[1]);
+  if (numbytes>=96)  STORE(out+64,Y[2],X[2]);
+  if (numbytes>=128) STORE(out+96,Y[3],X[3]);
   if (numbytes>=256){
-    STORE(out+128,X[4],Y[4]);
-    STORE(out+160,X[5],Y[5]);
-    STORE(out+192,X[6],Y[6]);
-    STORE(out+224,X[7],Y[7]);
+    STORE(out+128,Y[4],X[4]);
+    STORE(out+160,Y[5],X[5]);
+    STORE(out+192,Y[6],X[6]);
+    STORE(out+224,Y[7],X[7]);
   }
 
   return 0;
@@ -241,7 +241,7 @@ inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const 
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
     Enc(x,y,key,1);
-    ((u64 *)out)[1]=x[0]; ((u64 *)out)[0]=y[0];
+    ((u64 *)out)[1]=y[0]; ((u64 *)out)[0]=x[0];
 
     return 0;
   }
@@ -283,15 +283,15 @@ inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const 
 
   nonce[0]+=(numbytes>>4);
 
-  XOR_STORE(in,out,X[0],Y[0]);
-  if (numbytes>=64)  XOR_STORE(in+32,out+32,X[1],Y[1]);
-  if (numbytes>=96)  XOR_STORE(in+64,out+64,X[2],Y[2]);
-  if (numbytes>=128) XOR_STORE(in+96,out+96,X[3],Y[3]);
+  XOR_STORE(in,out,Y[0],X[0]);
+  if (numbytes>=64)  XOR_STORE(in+32,out+32,Y[1],X[1]);
+  if (numbytes>=96)  XOR_STORE(in+64,out+64,Y[2],X[2]);
+  if (numbytes>=128) XOR_STORE(in+96,out+96,Y[3],X[3]);
   if (numbytes>=256){
-    XOR_STORE(in+128,out+128,X[4],Y[4]);
-    XOR_STORE(in+160,out+160,X[5],Y[5]);
-    XOR_STORE(in+192,out+192,X[6],Y[6]);
-    XOR_STORE(in+224,out+224,X[7],Y[7]);
+    XOR_STORE(in+128,out+128,Y[4],X[4]);
+    XOR_STORE(in+160,out+160,Y[5],X[5]);
+    XOR_STORE(in+192,out+192,Y[6],X[6]);
+    XOR_STORE(in+224,out+224,Y[7],X[7]);
   }
 
   return 0;
@@ -391,4 +391,3 @@ inline __attribute__((always_inline)) int Transpose(u128 T[8])
   
   return 0;
 }
-

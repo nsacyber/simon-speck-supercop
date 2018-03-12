@@ -1,5 +1,5 @@
 //Some definitions using SSE4 intriniscs.  This file
-//is used for all of our SSE4 implementations of Simon
+//is used for all of our SSE4 implementations of Simon 
 //and Speck with 128-bit block sizes.
 
 #include <smmintrin.h>

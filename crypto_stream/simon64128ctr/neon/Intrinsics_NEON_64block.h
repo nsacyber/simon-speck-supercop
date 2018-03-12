@@ -28,12 +28,10 @@
 #define STORE(out,X,Y) (ST16(out,Tps(Y,X).val[0]),ST16(out+16,Tps(Y,X).val[1]))
 #define XOR_STORE(in,out,X,Y) (ST16(out,XOR(Tps(Y,X).val[0],LD16(in))), ST16(out+16,XOR(Tps(Y,X).val[1],LD16(in+16))))
 
-//The following rotation may simetimes provide better performance.
-//#define ROR(X,r) (XOR(SR(X,r),SL(X,(32-(r)))))
-
-#define ROL(X,r) vsriq_n_u32(SL(X,r),X,(32-r))
 #define ROR(X,r) vsriq_n_u32(SL(X,(32-r)),X,r)
-#define ROL4(X) ROL(X,4)
-#define ROR4(X) ROR(X,4)
-#define ROL8(X)  ROL(X,8)
-#define ROR8(X) ROR(X,8)
+#define ROL(X,r) ROR(X,(32-(r)))
+
+#define tableR vcreate_u8(0x0407060500030201LL)
+#define tableL vcreate_u8(0x0605040702010003LL)
+#define ROR8(X) SET(vtbl1_u8((uint8x8_t)vget_low_u32(X),tableR),vtbl1_u8((uint8x8_t)vget_high_u32(X),tableR))
+#define ROL8(X) SET(vtbl1_u8((uint8x8_t)vget_low_u32(X),tableL),vtbl1_u8((uint8x8_t)vget_high_u32(X),tableL))

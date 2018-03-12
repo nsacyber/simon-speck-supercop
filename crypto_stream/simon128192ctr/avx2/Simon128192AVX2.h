@@ -23,22 +23,22 @@
 
 #define RD(U,V,k) (V=XOR(V,ROL(U,2)), V=XOR(V,AND(ROL(U,1),ROL8(U))), V=XOR(V,k))
 
-#define Sx4(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]))
-#define Sx8(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]))
-#define Sx12(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]))
-#define Sx16(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]), RD(U[3],V[3],rk[s][0]))
+#define R1x4(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]))
+#define R1x8(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]))
+#define R1x12(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]))
+#define R1x16(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]), RD(U[3],V[3],rk[s][0]))
 
-#define R2x4(X,Y,rk,r,s)  (Sx4(X,Y,rk,r),  Sx4(Y,X,rk,s))
-#define R2x8(X,Y,rk,r,s)  (Sx8(X,Y,rk,r),  Sx8(Y,X,rk,s))
-#define R2x12(X,Y,rk,r,s) (Sx12(X,Y,rk,r), Sx12(Y,X,rk,s))
-#define R2x16(X,Y,rk,r,s) (Sx16(X,Y,rk,r), Sx16(Y,X,rk,s))
+#define R2x4(X,Y,rk,r,s)  (R1x4(X,Y,rk,r), R1x4(Y,X,rk,s))
+#define R2x8(X,Y,rk,r,s)  (R1x8(X,Y,rk,r), R1x8(Y,X,rk,s))
+#define R2x12(X,Y,rk,r,s) (R1x12(X,Y,rk,r), R1x12(Y,X,rk,s))
+#define R2x16(X,Y,rk,r,s) (R2x16(X,Y,rk,r), R1x16(Y,X,rk,s))
 
 #define f(x) ((LCS(x,1) & LCS(x,8)) ^ LCS(x,2))
 #define R1(x,y,k) (y^=f(x), y^=k)
 #define R2(x,y,k1,k2) (y^=f(x), y^=k1, x^=f(y), x^=k2)
 
-#define Sx1(x,y,k,s)   (R1(x[0],y[0],k[s]))
-#define Sx2(x,y,k,s)   (R1(x[0],y[0],k[s]), R1(x[1],y[1],k[s]))
+#define R1x1(x,y,k,s)   (R1(x[0],y[0],k[s]))
+#define R1x2(x,y,k,s)   (R1x1(x,y,k,s), R1(x[1],y[1],k[s]))
 
 #define R2x1(x,y,k,r,s) (R2(x[0],y[0],k[r],k[s]))
 #define R2x2(x,y,k,r,s) (R2(x[0],y[0],k[r],k[s]), R2(x[1],y[1],k[r],k[s]))
@@ -50,7 +50,7 @@
 		       R2x##n(X,Y,rk,30,31), R2x##n(X,Y,rk,32,33), R2x##n(X,Y,rk,34,35), R2x##n(X,Y,rk,36,37), R2x##n(X,Y,rk,38,39), \
 		       R2x##n(X,Y,rk,40,41), R2x##n(X,Y,rk,42,43), R2x##n(X,Y,rk,44,45), R2x##n(X,Y,rk,46,47), R2x##n(X,Y,rk,48,49), \
 		       R2x##n(X,Y,rk,50,51), R2x##n(X,Y,rk,52,53), R2x##n(X,Y,rk,54,55), R2x##n(X,Y,rk,56,57), R2x##n(X,Y,rk,58,59), \
-		       R2x##n(X,Y,rk,60,61), R2x##n(X,Y,rk,62,63), R2x##n(X,Y,rk,64,65), R2x##n(X,Y,rk,66,67),  Sx##n(X,Y,rk,68))
+		       R2x##n(X,Y,rk,60,61), R2x##n(X,Y,rk,62,63), R2x##n(X,Y,rk,64,65), R2x##n(X,Y,rk,66,67), R1x##n(X,Y,rk,68))
 
 
 #define _D SET(0xffffffffffffffffLL,0xffffffffffffffffLL,0xffffffffffffffffLL,0xffffffffffffffffLL)

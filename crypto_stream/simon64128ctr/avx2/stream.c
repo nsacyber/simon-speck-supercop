@@ -202,8 +202,7 @@ int crypto_stream_simon64128ctr_avx2_xor(
   const unsigned char *k
 )
 {
-  int i;
-  u32 nonce[2],K[4],key[44];
+  u32 i,nonce[2],K[4],key[44];
   unsigned char block[8];
   u64 * const block64 = (u64 *)block;
   u256 rk[44][8];

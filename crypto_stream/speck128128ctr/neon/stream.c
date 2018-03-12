@@ -143,7 +143,7 @@ int crypto_stream_speck128128ctr_neon_xor(
   const unsigned char *k
 )
 {
-  int i;
+  u32 i;
   u64 nonce[2],K[4],key[34],A,B,x,y;
   unsigned char block[16];
   u64 *const block64=(u64 *)block;
@@ -159,38 +159,9 @@ int crypto_stream_speck128128ctr_neon_xor(
   if (inlen<=16){
     B=K[1]; A=K[0];
     x=nonce[1]; y=nonce[0]; nonce[0]++;
-    Rx1b(x,y,A); Rx1b(B,A,0);
-    Rx1b(x,y,A); Rx1b(B,A,1);
-    Rx1b(x,y,A); Rx1b(B,A,2);
-    Rx1b(x,y,A); Rx1b(B,A,3);
-    Rx1b(x,y,A); Rx1b(B,A,4);
-    Rx1b(x,y,A); Rx1b(B,A,5);
-    Rx1b(x,y,A); Rx1b(B,A,6);
-    Rx1b(x,y,A); Rx1b(B,A,7);
-    Rx1b(x,y,A); Rx1b(B,A,8);
-    Rx1b(x,y,A); Rx1b(B,A,9);
-    Rx1b(x,y,A); Rx1b(B,A,10);
-    Rx1b(x,y,A); Rx1b(B,A,11);
-    Rx1b(x,y,A); Rx1b(B,A,12);
-    Rx1b(x,y,A); Rx1b(B,A,13);
-    Rx1b(x,y,A); Rx1b(B,A,14);
-    Rx1b(x,y,A); Rx1b(B,A,15);
-    Rx1b(x,y,A); Rx1b(B,A,16);
-    Rx1b(x,y,A); Rx1b(B,A,17);
-    Rx1b(x,y,A); Rx1b(B,A,18);
-    Rx1b(x,y,A); Rx1b(B,A,19);
-    Rx1b(x,y,A); Rx1b(B,A,20);
-    Rx1b(x,y,A); Rx1b(B,A,21);
-    Rx1b(x,y,A); Rx1b(B,A,22);
-    Rx1b(x,y,A); Rx1b(B,A,23);
-    Rx1b(x,y,A); Rx1b(B,A,24);
-    Rx1b(x,y,A); Rx1b(B,A,25);
-    Rx1b(x,y,A); Rx1b(B,A,26);
-    Rx1b(x,y,A); Rx1b(B,A,27);
-    Rx1b(x,y,A); Rx1b(B,A,28);
-    Rx1b(x,y,A); Rx1b(B,A,29);
-    Rx1b(x,y,A); Rx1b(B,A,30);
-    Rx1b(x,y,A); Rx1b(B,A,31);
+    for(i=0;i<numrounds;i++){
+      Rx1b(x,y,A); Rx1b(B,A,i);
+    }
     block64[1]=x; block64[0]=y;
     for(i=0;i<inlen;i++) out[i]=block[i]^in[i];
 

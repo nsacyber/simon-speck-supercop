@@ -110,7 +110,7 @@ int Encrypt(unsigned char *out, u64 nonce[], u256 rk[][8], u64 key[], int numbyt
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
     Enc(x,y,key,1);
-    ((u64 *)out)[1]=x[0]; ((u64 *)out)[0]=y[0];
+    ((u64 *)out)[1]=y[0]; ((u64 *)out)[0]=x[0];
 
     return 0;
   }
@@ -119,8 +119,8 @@ int Encrypt(unsigned char *out, u64 nonce[], u256 rk[][8], u64 key[], int numbyt
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
     x[1]=nonce[1]; y[1]=nonce[0]; nonce[0]++;
     Enc(x,y,key,2);
-    ((u64 *)out)[1]=x[0]; ((u64 *)out)[0]=y[0];
-    ((u64 *)out)[3]=x[1]; ((u64 *)out)[2]=y[1];
+    ((u64 *)out)[1]=y[0]; ((u64 *)out)[0]=x[0];
+    ((u64 *)out)[3]=y[1]; ((u64 *)out)[2]=x[1];
 
     return 0;
   }
@@ -162,15 +162,15 @@ int Encrypt(unsigned char *out, u64 nonce[], u256 rk[][8], u64 key[], int numbyt
 
   nonce[0]+=(numbytes>>4);
 
-  STORE(out,X[0],Y[0]);
-  if (numbytes>=128) STORE(out+64,X[1],Y[1]);
-  if (numbytes>=192) STORE(out+128,X[2],Y[2]);
-  if (numbytes>=256) STORE(out+192,X[3],Y[3]);
+  STORE(out,Y[0],X[0]);
+  if (numbytes>=128) STORE(out+64,Y[1],X[1]);
+  if (numbytes>=192) STORE(out+128,Y[2],X[2]);
+  if (numbytes>=256) STORE(out+192,Y[3],X[3]);
   if (numbytes>=512){
-    STORE(out+256,X[4],Y[4]);
-    STORE(out+320,X[5],Y[5]);
-    STORE(out+384,X[6],Y[6]);
-    STORE(out+448,X[7],Y[7]);
+    STORE(out+256,Y[4],X[4]);
+    STORE(out+320,Y[5],X[5]);
+    STORE(out+384,Y[6],X[6]);
+    STORE(out+448,Y[7],X[7]);
   }
 
   return 0;
@@ -262,7 +262,7 @@ int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u256 r
   if (numbytes==16){
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
     Enc(x,y,key,1);
-    ((u64 *)out)[1]=x[0]; ((u64 *)out)[0]=y[0];
+    ((u64 *)out)[1]=y[0]; ((u64 *)out)[0]=x[0];
 
     return 0;
   }
@@ -271,8 +271,8 @@ int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u256 r
     x[0]=nonce[1]; y[0]=nonce[0]; nonce[0]++;
     x[1]=nonce[1]; y[1]=nonce[0]; nonce[0]++;
     Enc(x,y,key,2);
-    ((u64 *)out)[1]=x[0]^((u64 *)in)[1]; ((u64 *)out)[0]=y[0]^((u64 *)in)[0];
-    ((u64 *)out)[3]=x[1]^((u64 *)in)[3]; ((u64 *)out)[2]=y[1]^((u64 *)in)[2];
+    ((u64 *)out)[1]=y[0]^((u64 *)in)[1]; ((u64 *)out)[0]=x[0]^((u64 *)in)[0];
+    ((u64 *)out)[3]=y[1]^((u64 *)in)[3]; ((u64 *)out)[2]=x[1]^((u64 *)in)[2];
 
     return 0;
   }
@@ -314,15 +314,15 @@ int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u256 r
 
   nonce[0]+=(numbytes>>4);
 
-  XOR_STORE(in,out,X[0],Y[0]);
-  if (numbytes>=128) XOR_STORE(in+64,out+64,X[1],Y[1]);
-  if (numbytes>=192) XOR_STORE(in+128,out+128,X[2],Y[2]);
-  if (numbytes>=256) XOR_STORE(in+192,out+192,X[3],Y[3]);
+  XOR_STORE(in,out,Y[0],X[0]);
+  if (numbytes>=128) XOR_STORE(in+64,out+64,Y[1],X[1]);
+  if (numbytes>=192) XOR_STORE(in+128,out+128,Y[2],X[2]);
+  if (numbytes>=256) XOR_STORE(in+192,out+192,Y[3],X[3]);
   if (numbytes>=512){
-    XOR_STORE(in+256,out+256,X[4],Y[4]);
-    XOR_STORE(in+320,out+320,X[5],Y[5]);
-    XOR_STORE(in+384,out+384,X[6],Y[6]);
-    XOR_STORE(in+448,out+448,X[7],Y[7]);
+    XOR_STORE(in+256,out+256,Y[4],X[4]);
+    XOR_STORE(in+320,out+320,Y[5],X[5]);
+    XOR_STORE(in+384,out+384,Y[6],X[6]);
+    XOR_STORE(in+448,out+448,Y[7],X[7]);
   }
 
   return 0;
@@ -338,7 +338,6 @@ int ExpandKeyBS(u64 K[],u256 rk[][8])
     rk[i][0]=SET(K[i],K[i],K[i],K[i]);
     for(j=1;j<8;j++){
       rk[i][j]=rk[i][0];
-
     }
     Transpose(rk[i]);
   }

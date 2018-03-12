@@ -23,16 +23,16 @@
 
 #define RD(U,V,k) (V=XOR(V,ROL(U,2)), V=XOR(V,AND(ROL(U,1),ROL8(U))), V=XOR(V,k))
 
-#define Sx4(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]))
-#define Sx8(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]))
-#define Sx12(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]))
-#define Sx16(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]), RD(U[3],V[3],rk[s][0]))
+#define R1x4(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]))
+#define R1x8(U,V,rk,s)  (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]))
+#define R1x12(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]))
+#define R1x16(U,V,rk,s) (RD(U[0],V[0],rk[s][0]), RD(U[1],V[1],rk[s][0]), RD(U[2],V[2],rk[s][0]), RD(U[3],V[3],rk[s][0]))
 
 
-#define R2x4(X,Y,rk,r,s)  (Sx4(X,Y,rk,r),  Sx4(Y,X,rk,s))
-#define R2x8(X,Y,rk,r,s)  (Sx8(X,Y,rk,r),  Sx8(Y,X,rk,s))
-#define R2x12(X,Y,rk,r,s) (Sx12(X,Y,rk,r), Sx12(Y,X,rk,s))
-#define R2x16(X,Y,rk,r,s) (Sx16(X,Y,rk,r), Sx16(Y,X,rk,s))
+#define R2x4(X,Y,rk,r,s)  (R1x4(X,Y,rk,r),  R1x4(Y,X,rk,s))
+#define R2x8(X,Y,rk,r,s)  (R1x8(X,Y,rk,r),  R1x8(Y,X,rk,s))
+#define R2x12(X,Y,rk,r,s) (R1x12(X,Y,rk,r), R1x12(Y,X,rk,s))
+#define R2x16(X,Y,rk,r,s) (R1x16(X,Y,rk,r), R1x16(Y,X,rk,s))
 
 
 #define f(x) ((LCS(x,1) & LCS(x,8)) ^ LCS(x,2))

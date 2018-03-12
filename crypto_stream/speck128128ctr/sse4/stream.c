@@ -96,7 +96,7 @@ int crypto_stream_speck128128ctr_sse4(
 
 
 
-static int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes)
+int Encrypt(unsigned char *out, u64 nonce[], u128 rk[], u64 key[], int numbytes)
 {
   u64  x[2],y[2];
   u128 X[4],Y[4],Z[4];
@@ -209,7 +209,7 @@ int crypto_stream_speck128128ctr_sse4_xor(
 
 
 
-static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes)
+int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[], u128 rk[], u64 key[], int numbytes)
 {
   u64  x[2],y[2];
   u128 X[4],Y[4],Z[4];
@@ -250,7 +250,7 @@ static int Encrypt_Xor(unsigned char *out, const unsigned char *in, u64 nonce[],
 
 
 
-static int ExpandKey(u64 K[], u128 rk[], u64 key[])
+int ExpandKey(u64 K[], u128 rk[], u64 key[])
 {
   u64 A=K[0], B=K[1];
 

@@ -19,7 +19,6 @@
 #define SL vshlq_n_u64
 #define SR vshrq_n_u64
 
-
 #define SET(a,b) vcombine_u64((uint64x1_t)(a),(uint64x1_t)(b))
 #define SET1(X,c) (X=SET(c,c))
 #define SET2(X,c) (SET1(X,c), X=ADD(X,SET(0x1,0x0)),c+=2)
@@ -29,16 +28,10 @@
 #define STORE(ip,X,Y) (((u64 *)(ip))[0]=HIGH(Y), ((u64 *)(ip))[1]=HIGH(X), ((u64 *)(ip))[2]=LOW(Y), ((u64 *)(ip))[3]=LOW(X))
 #define XOR_STORE(in,out,X,Y) (Y=XOR(Y,SET(((u64 *)(in))[2],((u64 *)(in))[0])), X=XOR(X,SET(((u64 *)(in))[3],((u64 *)(in))[1])), STORE(out,X,Y))
 
-//On some ARM processors the following rotation may perform better.
-//#define ROR(X,r) (XOR(SR(X,r),SL(X,(64-(r)))))
-
 #define ROR(X,r) vsriq_n_u64(SL(X,(64-r)),X,r)
 #define ROL(X,r) ROR(X,(64-r))
-#define ROL4(X) ROL(X,4)
-#define ROR4(X) ROR(X,4)
-#define ROR8(X) ROR(X,8)
-#define ROL8(X) ROR(X,56)
 
-
-
-
+#define tableR vcreate_u8(0x0007060504030201LL)
+#define tableL vcreate_u8(0x0605040302010007LL)
+#define ROR8(X) SET(vtbl1_u8((uint8x8_t)vget_low_u64(X),tableR), vtbl1_u8((uint8x8_t)vget_high_u64(X),tableR))
+#define ROL8(X) SET(vtbl1_u8((uint8x8_t)vget_low_u64(X),tableL), vtbl1_u8((uint8x8_t)vget_high_u64(X),tableL))

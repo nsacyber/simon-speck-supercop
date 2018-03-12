@@ -15,7 +15,7 @@ int crypto_stream_simon6496ctr_ref(
   u32 i,nonce[2],K[3],key[42],x,y,t;
   unsigned char *block=malloc(8);   
 
-  if (!outlen) return 0;
+  if (!outlen){free(block); return 0;}
 
   nonce[0]=((u32*)n)[0];
   nonce[1]=((u32*)n)[1];
@@ -41,6 +41,8 @@ int crypto_stream_simon6496ctr_ref(
     for(i=0;i<outlen;i++) out[i+4*t]=block[i];
   }
 
+  free(block);
+
   return 0;
 }
 
@@ -56,7 +58,7 @@ int crypto_stream_simon6496ctr_ref_xor(
   u32 i,nonce[2],K[3],key[42],x,y,t;
   unsigned char *block=malloc(8);  
  
-  if (!inlen) return 0;
+  if (!inlen){free(block); return 0;}
 
   nonce[0]=((u32*)n)[0];
   nonce[1]=((u32*)n)[1];
@@ -80,6 +82,8 @@ int crypto_stream_simon6496ctr_ref_xor(
     ((u32 *)block)[1]=x; ((u32 *)block)[0]=y;
     for(i=0;i<inlen;i++) out[i+4*t]=block[i]^in[i+4*t];
   }
+
+  free(block);
 
   return 0;
 }

@@ -168,8 +168,7 @@ int crypto_stream_simon128256ctr_sse4_xor(
   const unsigned char *k
 )
 {
-  int i;
-  u64 nonce[2],K[4],key[72];
+  u64 i,nonce[2],K[4],key[72];
   unsigned char block[16];
   u64 * const block64 = (u64 *)block;
   u128 rk[72][8];

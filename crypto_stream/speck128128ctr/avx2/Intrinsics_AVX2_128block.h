@@ -30,7 +30,9 @@
 #define LD(ip) _mm256_loadu_si256((__m256i *)(ip))
 #define ST(ip,X) _mm256_storeu_si256((__m256i *)(ip),X)
 #define STORE(out,X,Y) (ST(out,LOW(Y,X)), ST(out+32,HIGH(Y,X)))
+#define STORE_ALT(out,X,Y) (ST(out,LOW(X,Y)), ST(out+32,HIGH(X,Y)))
 #define XOR_STORE(in,out,X,Y) (ST(out,XOR(LD(in),LOW(Y,X))), ST(out+32,XOR(LD(in+32),HIGH(Y,X))))
+#define XOR_STORE_ALT(in,out,X,Y) (ST(out,XOR(LD(in),LOW(X,Y))), ST(out+32,XOR(LD(in+32),HIGH(X,Y))))
 
 #define SHFL _mm256_shuffle_epi8
 #define R8 SET(0x080f0e0d0c0b0a09LL,0x0007060504030201LL,0x080f0e0d0c0b0a09LL,0x0007060504030201LL)

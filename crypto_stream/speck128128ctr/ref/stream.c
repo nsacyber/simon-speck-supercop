@@ -15,7 +15,7 @@ int crypto_stream_speck128128ctr_ref(
   u64 i,nonce[2],K[2],key[32],x,y,t;
   unsigned char *block=malloc(16);   
 
-  if (!outlen) return 0;
+  if (!outlen) {free(block); return 0;}
 
   nonce[0]=((u64*)n)[0];
   nonce[1]=((u64*)n)[1];
@@ -41,6 +41,8 @@ int crypto_stream_speck128128ctr_ref(
     for(i=0;i<outlen;i++) out[i+8*t]=block[i];
   }
 
+  free(block);
+
   return 0;
 }
 
@@ -56,7 +58,7 @@ int crypto_stream_speck128128ctr_ref_xor(
   u64 i,nonce[2],K[2],key[32],x,y,t;
   unsigned char *block=malloc(16);  
  
-  if (!inlen) return 0;
+  if (!inlen) {free(block); return 0;}
 
   nonce[0]=((u64*)n)[0];
   nonce[1]=((u64*)n)[1];
@@ -80,6 +82,8 @@ int crypto_stream_speck128128ctr_ref_xor(
     ((u64 *)block)[1]=x; ((u64 *)block)[0]=y;
     for(i=0;i<inlen;i++) out[i+8*t]=block[i]^in[i+8*t];
   }
+
+  free(block);
 
   return 0;
 }

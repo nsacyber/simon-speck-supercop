@@ -294,7 +294,7 @@ inline __attribute__((always_inline)) int Encrypt_Xor(unsigned char *out, const 
 
 
 
-static int ExpandKey(u64 K[], u256 rk[], u64 key[])
+int ExpandKey(u64 K[], u256 rk[], u64 key[])
 {
   u64 A=K[0], B=K[1], C=K[2], D=K[3];
 
