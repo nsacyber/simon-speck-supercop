@@ -7,7 +7,7 @@ These implementations use counter mode to work as stream ciphers and are
 available in the following directories:
 
 * SIMON
-    * 64/96    - [crypto_stream/simon6496ctr/](https://github.com/iadgov/simon-speck-supercop/tree/master/crypto_stream/simon6496ctr)
+    * 64/96    - [crypto_stream/simon6496ctr/](https://github.com/nsacyber/simon-speck-supercop/tree/master/crypto_stream/simon6496ctr)
     * 64/128   - [crypto_stream/simon64128ctr/](https://github.com/nsacyber/simon-speck-supercop/tree/master/crypto_stream/simon64128ctr)
     * 128/128  - [crypto_stream/simon128128ctr/](https://github.com/nsacyber/simon-speck-supercop/tree/master/crypto_stream/simon128128ctr)
     * 128/192  - [crypto_stream/simon128192ctr/](https://github.com/nsacyber/simon-speck-supercop/tree/master/crypto_stream/simon128192ctr)
